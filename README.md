@@ -51,6 +51,11 @@ See [all source details, resolutions and provider links](docs/sources.md).
 
 ## 2. Install in QGIS or ArcGIS Pro
 
+| Download | How to open it |
+| --- | --- |
+| [QGIS plugin ZIP](https://github.com/Bipul-roy-AI/Universal-Satellite/raw/refs/heads/main/gis/qgis/universal_satellite_qgis.zip) | QGIS → Plugins → Manage and Install Plugins → Install from ZIP |
+| [ArcGIS Pro toolbox ZIP](https://github.com/Bipul-roy-AI/Universal-Satellite/raw/refs/heads/main/gis/arcgis/universal_satellite_arcgis.zip) | Extract ZIP → Catalog → Toolboxes → Add Toolbox → `UniversalSatellite.pyt` |
+
 Requires Python 3.10 or newer. **Install the core package into the Python environment used by your GIS.** Installing into an unrelated terminal environment will not make it available in the desktop application.
 
 ### QGIS 3.28 or newer
@@ -78,10 +83,12 @@ Requires Python 3.10 or newer. **Install the core package into the Python enviro
    python -m pip install "C:\path\to\Universal-Satellite"
    ```
 
-2. Open **Catalog → Toolboxes → Add Toolbox** and select [`gis/arcgis/UniversalSatellite.pyt`](gis/arcgis/UniversalSatellite.pyt).
+2. Extract the **ArcGIS Pro toolbox ZIP** from the download table. Open **Catalog → Toolboxes → Add Toolbox** and select `UniversalSatellite/UniversalSatellite.pyt` from the extracted folder. The source [`gis/arcgis/UniversalSatellite.pyt`](gis/arcgis/UniversalSatellite.pyt) can also be added directly.
 3. Open the **Universal Satellite** toolbox to find scene-search and raster-index tools. ArcMap/Python 2 is not supported.
 
 For raster indices, the GIS Python environment also needs compatible **NumPy and Rasterio** packages. Follow the [full GIS installation guide](docs/gis.md) for the optional raster extra and dependency guidance.
+
+Both ZIPs contain the GIS adapter, not the core SDK or a GIS runtime. To rebuild the ArcGIS ZIP from source, run `python tools/package_arcgis.py --force`; the rebuilt file is written to `dist/universal_satellite_arcgis.zip`.
 
 ## 3. Run your first search
 

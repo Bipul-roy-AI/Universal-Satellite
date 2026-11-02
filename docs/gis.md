@@ -1,5 +1,15 @@
 # QGIS and ArcGIS Pro toolboxes
 
+| Application | Toolbox ZIP | Install |
+| --- | --- | --- |
+| QGIS | [universal_satellite_qgis.zip](../gis/qgis/universal_satellite_qgis.zip) | Install the ZIP directly through QGIS's **Install from ZIP**. |
+| ArcGIS Pro | [universal_satellite_arcgis.zip](../gis/arcgis/universal_satellite_arcgis.zip) | Extract the ZIP, then add `UniversalSatellite/UniversalSatellite.pyt` as a toolbox. |
+
+On GitHub, open the ZIP link and use **Download raw file** to save the archive.
+Both ZIPs contain desktop adapters; **install the core Python SDK separately in
+your GIS's Python environment** using the steps below. Neither ZIP bundles or
+automatically installs the SDK or its optional raster dependencies.
+
 Both integrations use the same Python SDK as the CLI. They provide **Search scenes**
 and **Raster index** tools. Search returns a GeoJSON manifest containing scene
 footprints, metadata and asset URLs. It does not download or mosaic imagery.
@@ -42,10 +52,16 @@ in your GIS version before batch work.
    print(len(list_datasets()))
    ```
 
-2. Open **Settings → User Profiles → Open Active Profile Folder**. Copy the whole
-   `gis/qgis/universal_satellite_qgis` directory to that profile's
-   `python/plugins/` directory. Keep the `universal_satellite_qgis` folder
-   name. Alternatively, from the repository root run:
+2. Download the QGIS ZIP from the table above. In QGIS, open **Plugins → Manage
+   and Install Plugins → Install from ZIP** and select
+   `universal_satellite_qgis.zip`; do not extract it first. The ZIP includes the
+   plugin directory at its root and requires the core SDK installed in step 1.
+
+   For a manual source install, open **Settings → User Profiles → Open Active
+   Profile Folder** and copy the whole `gis/qgis/universal_satellite_qgis`
+   directory to the profile's `python/plugins/` directory. Keep the
+   `universal_satellite_qgis` folder name. To rebuild the ZIP from source, run
+   these commands from the repository root:
 
    ```bash
    python tools/package_qgis.py
@@ -112,8 +128,12 @@ The `.pyt` is for **ArcGIS Pro's Python 3 environment**, not ArcMap/Python 2.
    The search tool does not need Rasterio. Check the interpreter by importing
    `universal_satellite` in Pro's Python window. Restart Pro after changing its
    environment.
-2. From **Catalog → Toolboxes → Add Toolbox**, select
-   `gis/arcgis/UniversalSatellite.pyt`.
+2. Download the ArcGIS Pro ZIP from the table above and extract it to a permanent
+   folder. It contains `UniversalSatellite/UniversalSatellite.pyt` and
+   `UniversalSatellite/INSTALL.md`. From **Catalog → Toolboxes → Add Toolbox**,
+   select that extracted `UniversalSatellite.pyt`. The SDK installed in step 1
+   is still required. When using the source checkout instead, select
+   `gis/arcgis/UniversalSatellite.pyt` directly.
 3. Open **Search satellite scenes (GeoJSON manifest)**. Select a dataset ID,
    provide an extent and explicitly set its input coordinate system. The default
    is EPSG:4326: change it when using map coordinates from a projected CRS. Enter
@@ -125,6 +145,14 @@ The `.pyt` is for **ArcGIS Pro's Python 3 environment**, not ArcMap/Python 2.
    flatten or omit nested objects. Keep that manifest for the CLI downloader.
 5. Download selected assets with the CLI and add the GeoTIFFs to the map. Run
    **Compute normalized-difference raster index** on local prepared bands.
+
+To rebuild the ArcGIS Pro ZIP from source, run the following command from the
+repository root, then extract `dist/universal_satellite_arcgis.zip` and add its
+`UniversalSatellite.pyt` as described above:
+
+```bash
+python tools/package_arcgis.py --force
+```
 
 Search uses ordinary network access from the desktop. Configure your institution's
 proxy/trust settings in that Python environment if needed. Public metadata access
