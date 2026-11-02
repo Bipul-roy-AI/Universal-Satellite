@@ -17,8 +17,9 @@ Use this small, repeatable search around Dhaka in both applications:
 | Maximum number of scenes | `5` |
 
 Five is the requested limit, not a guaranteed result count. Search returns scene
-footprints and asset links, **not downloaded satellite pixels**. Cloud cover is a
-scene metadata filter, not a pixel cloud mask. Reference-only sources listed in
+footprints and asset links by default. Leave **Download images after search**
+unchecked for these first search-only captures; enable it separately in the
+optional download walkthrough below. Cloud cover is a scene metadata filter, not a pixel cloud mask. Reference-only sources listed in
 the data catalog do not appear in the toolboxes' searchable-dataset dropdowns.
 
 ## QGIS screenshot
@@ -29,10 +30,10 @@ the data catalog do not appear in the toolboxes' searchable-dataset dropdowns.
    Processing console, the same area is
    `90.2,90.5,23.6,23.9 [EPSG:4326]`: QGIS uses **xmin, xmax, ymin, ymax**.
    Ensure the extent CRS is WGS84, even if the map uses a different CRS.
-3. Save to a new file such as `dhaka-qgis-scenes.geojson` and run. In the tool's
-   log, check the actual message `Wrote N scene footprints. Raster assets were
-   not downloaded.` A completed run with `N > 0` is needed for a successful
-   search screenshot.
+3. Save to a new file such as `dhaka-qgis-scenes.geojson`, leave downloads
+   disabled and run. Check the actual footprint count and completion message in
+   the Processing log. A completed run with `N > 0` is needed for a successful
+   search screenshot; this does not establish imagery downloads.
 4. Add the saved GeoJSON using **Layer → Add Layer → Add Vector Layer**. Zoom to
    the layer and confirm features appear in the attribute table. Overlapping
    acquisition footprints can cover each other; the number of visible outlines
@@ -47,12 +48,14 @@ the data catalog do not appear in the toolboxes' searchable-dataset dropdowns.
 
 1. Add `gis/arcgis/UniversalSatellite.pyt` to Catalog, then open **Universal
    Satellite → Search satellite scenes (GeoJSON manifest)**.
-2. Set **Dataset ID** to `sentinel-2-l2a`. Enter the area as XMin `90.2`, YMin
+2. Choose the named **Sentinel-2 SR / Level-2A** source with dataset ID
+   `sentinel-2-l2a` in brackets. Enter the area as XMin `90.2`, YMin
    `23.6`, XMax `90.5`, YMax `23.9`. Explicitly set **Coordinate system of input
    extent** to **GCS WGS 1984 / EPSG:4326**. Enter the dates, cloud threshold and
    maximum scene count from the table above.
 3. Choose a new `.geojson` file outside a geodatabase, for example
-   `dhaka-arcgis-scenes.geojson`, and run. Inspect the Geoprocessing messages for
+   `dhaka-arcgis-scenes.geojson`, leave downloads disabled and run. Inspect the
+   Geoprocessing messages for
    `Wrote N scene footprints to ...` and verify `N > 0`.
 4. Run ArcGIS Pro's **JSON To Features** on that GeoJSON. Choose **Polygon** as
    the geometry type and save the feature class in a geodatabase. Add it to the
@@ -63,10 +66,51 @@ the data catalog do not appear in the toolboxes' searchable-dataset dropdowns.
    `docs/images/arcgis-search.png`. Retain a separate parameter capture or record
    the inputs in the caption if the full tool panel does not fit.
 
+## Optional direct-download screenshots
+
+These steps exercise actual GUI downloads rather than terminal commands. Use
+public HTTP(S) Sentinel-2 L2A assets for a small first check; this is different
+from Sentinel-2 L1C requester-pays S3 assets or protected USGS downloads.
+
+1. Open **Search satellite scenes (GeoJSON manifest)** in either GIS. Reuse the
+   small area/dates above, reduce the maximum scene count to **1**, and choose a
+   new manifest file. Enable **Download images after search**, set **Asset keys**
+   to `red,nir`, and choose a new **Image output folder**, for example a
+   `UniversalSatellite/dhaka-images` folder under your Documents directory.
+   Leave overwrite off. These are exact asset keys, not file paths.
+2. Capture the parameter panel showing the enabled checkbox, asset keys, scene
+   limit and your selected folder. Save an actual capture as
+   `docs/images/qgis-download-panel.png` or
+   `docs/images/arcgis-download-panel.png`. A panel capture alone documents inputs,
+   not a successful download.
+3. Run the Processing/geoprocessing job. Inspect progress, successful file counts
+   and warnings. Open the chosen folder and verify that completed image files
+   exist and can be opened as rasters. Capture the job's real completion messages
+   alongside the resulting folder or loaded raster, using
+   `docs/images/qgis-download-results.png` or
+   `docs/images/arcgis-download-results.png`. Show actual generated filenames;
+   do not rename an empty placeholder to look like a downloaded scene.
+4. To check downloading an existing result instead, open **Download satellite
+   image assets** and choose that original one-scene GeoJSON, asset keys and a
+   different output folder. Capture its inputs and observed result. This tests
+   the separate GUI tool without rerunning search or using a CLI download.
+
+If testing Planetary Computer assets, record whether its signing checkbox was
+enabled; omit the generated signed URLs from captures. Record partial failures,
+existing files skipped/preserved and cancellation as such. Cancellation preserves
+completed downloads and removes an interrupted temporary `.part` file; it does
+not undo previously completed files. Native timing and background behavior still
+need to be checked in each desktop application.
+
+An all-failed job, an HTML login response or an empty folder is not a successful
+imagery download. Keep the exact observed errors and provider/access requirements.
+Downloading also does not apply cloud masks, scale reflectance or convert raw
+Landsat DN into TOA/SR data; those preparations are separate from this screenshot.
+
 ## Optional NDVI screenshot
 
-After a search, download appropriate red and NIR assets and prepare **aligned,
-single-band reflectance GeoTIFFs** with matching grid, CRS and valid calibration.
+After downloading through either GUI workflow, prepare appropriate red and NIR
+assets as **aligned, single-band reflectance GeoTIFFs** with matching grid, CRS and valid calibration.
 Use the provider's pixel QA to mask invalid or cloudy observations; apply scale
 and offset correctly. The raster engine applies embedded scale/offset metadata,
 so do not also apply it manually without resetting the metadata to identity.
@@ -83,7 +127,9 @@ imagery retrieval.
 
 For each real screenshot, record the app version, run date, map CRS, input extent
 CRS, dataset ID, date range, cloud threshold, requested limit and **actual returned
-count**. For example, fill in this template using observed values:
+count**. For download captures also record the exact asset keys, selected folder,
+signing/overwrite settings, completed/failed counts and actual output files.
+For example, fill in this template using observed values:
 
 > QGIS [version], run [date]. Dataset sentinel-2-l2a; WGS84 bbox
 > [90.2, 23.6, 90.5, 23.9]; dates 2024-01-01 to 2024-03-31; cloud ≤20%;

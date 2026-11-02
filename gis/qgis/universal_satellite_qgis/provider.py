@@ -2,7 +2,7 @@
 
 from qgis.core import QgsProcessingProvider
 
-from .algorithms import RasterIndex, SearchScenes
+from .algorithms import DownloadAssets, RasterIndex, SearchScenes
 
 
 class UniversalSatelliteProvider(QgsProcessingProvider):
@@ -13,8 +13,9 @@ class UniversalSatelliteProvider(QgsProcessingProvider):
         return "Universal Satellite"
 
     def longName(self):
-        return "Universal Satellite — archive discovery and raster indices"
+        return "Universal Satellite — archive discovery, image downloads and raster indices"
 
     def loadAlgorithms(self):
         self.addAlgorithm(SearchScenes())
+        self.addAlgorithm(DownloadAssets())
         self.addAlgorithm(RasterIndex())

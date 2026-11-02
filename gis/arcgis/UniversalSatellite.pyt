@@ -4,14 +4,52 @@ import json
 import os
 import tempfile
 from pathlib import Path
+from types import SimpleNamespace
 
 import arcpy
 
 
 def _datasets():
-    from universal_satellite.catalog import list_datasets
+    """Use the live SDK catalog, or display bundled choices before installation."""
+    try:
+        from universal_satellite.catalog import list_datasets
+    except ImportError:
+        sources = []
+    else:
+        sources = [item for item in list_datasets() if item.status == "searchable"]
+    try:
+        snapshot = json.loads(Path(__file__).with_name("datasets.json").read_text(encoding="utf-8"))
+    except FileNotFoundError as exc:
+        if sources:
+            return sources
+        raise RuntimeError(
+            "Install the universal-satellite core SDK or reinstall the complete toolbox ZIP including datasets.json."
+        ) from exc
+    if snapshot.get("schema_version") != 1:
+        raise ValueError("Unsupported bundled source catalog; reinstall the complete toolbox package.")
+    known = {source.id for source in sources}
+    sources.extend(SimpleNamespace(**item) for item in snapshot["datasets"] if item["status"] == "searchable" and item["id"] not in known)
+    return sources
 
-    return [item for item in list_datasets() if item.status == "searchable"]
+
+def _dataset_label(source):
+    return f"{source.title} [{source.id}]"
+
+
+def _resolve_dataset(value, choices):
+    for source in choices:
+        if value in (source.id, _dataset_label(source)):
+            return source
+    raise ValueError(f"Unknown searchable dataset: {value}")
+
+
+def _source_help():
+    lines = []
+    for source in _datasets():
+        end = source.end or "ongoing (provider coverage varies)"
+        static = " Static inventory: requested dates are not filtered." if not source.temporal else ""
+        lines.append(f"{_dataset_label(source)} — source era {source.start} to {end}.{static} {source.description}")
+    return "\n\nAvailable searchable sources (source eras are not guaranteed catalog coverage):\n" + "\n\n".join(lines)
 
 
 def _parameter(name, label, datatype, direction="Input", required=True):
@@ -19,6 +57,48 @@ def _parameter(name, label, datatype, direction="Input", required=True):
         name=name, displayName=label, datatype=datatype, direction=direction,
         parameterType="Required" if required else "Optional"
     )
+
+
+def _boolean(parameters, index):
+    return len(parameters) > index and str(parameters[index].valueAsText).lower() in {"true", "1"}
+
+
+def _download(manifest, assets, directory, signing, overwrite, messages):
+    try:
+        from universal_satellite.download import download_manifest
+    except ImportError as exc:
+        raise RuntimeError("Install or upgrade universal-satellite in ArcGIS Pro's Python environment to use image downloads.") from exc
+    if not directory:
+        raise ValueError("Choose an image output folder.")
+    keys = [key.strip() for key in (assets or "").split(",") if key.strip()]
+    environment = getattr(arcpy, "env", None)
+    auto_cancel = getattr(environment, "autoCancelling", None)
+    if auto_cancel is not None:
+        environment.autoCancelling = False
+
+    def progress(percent, message):
+        arcpy.SetProgressorPosition(int(percent))
+        arcpy.SetProgressorLabel(message)
+        messages.addMessage(message)
+
+    try:
+        arcpy.SetProgressor("step", "Downloading satellite image assets", 0, 100, 1)
+        result = download_manifest(
+            manifest, keys, directory, sign_planetary=signing, overwrite=overwrite,
+            progress=progress, cancelled=lambda: bool(getattr(environment, "isCancelled", False)),
+        )
+    finally:
+        arcpy.ResetProgressor()
+        if auto_cancel is not None:
+            environment.autoCancelling = auto_cancel
+    for failure in result["failed"]:
+        messages.addWarningMessage(f"{failure['scene']} / {failure['asset']}: {failure['error']}")
+    messages.addMessage(f"Downloaded {len(result['downloaded'])} image asset(s) to {directory}; {len(result['failed'])} failed.")
+    if result["cancelled"]:
+        messages.addWarningMessage("Download cancelled. Completed files were retained; the interrupted file was removed.")
+    elif result["failed"] and not result["downloaded"]:
+        raise RuntimeError("No image assets were downloaded. See the provider/access errors above.")
+    return result
 
 
 def _write_manifest(result, path):
@@ -80,7 +160,7 @@ class Toolbox:
     def __init__(self):
         self.label = "Universal Satellite"
         self.alias = "universal_satellite"
-        self.tools = [SearchScenes, RasterIndex]
+        self.tools = [SearchScenes, RasterIndex, DownloadAssets]
 
 
 class SearchScenes:
@@ -95,20 +175,24 @@ class SearchScenes:
             "The output contains scene footprints and asset links, not imagery. Split areas crossing "
             "the antimeridian. Specify the input extent's coordinate system. "
             "Static Copernicus DEM, NASADEM and JRC Global Surface Water inventories "
-            "ignore requested dates and label that behavior in manifest metadata."
-        )
+            "ignore requested dates and label that behavior in manifest metadata. "
+            "The bundled catalog is visible before the core SDK is installed; "
+            "install the SDK before running a search. Enable Download images after "
+            "search and choose an output folder to retrieve selected image assets "
+            "in the same geoprocessing job, or use Download satellite image assets "
+            "with a saved manifest. Downloads respect provider authentication and "
+            "do not bypass requester-pays S3 requirements."
+        ) + _source_help()
         self.canRunInBackground = False
 
     def getParameterInfo(self):
-        dataset = _parameter(
-            "dataset", "Dataset ID (sentinel-2-l1c = TOA; sentinel-2-l2a = SR)", "GPString"
-        )
+        dataset = _parameter("dataset", "Data source (name [dataset ID])", "GPString")
         dataset.filter.type = "ValueList"
-        try:
-            dataset.filter.list = [item.id for item in _datasets()]
-        except ImportError:
-            dataset.filter.list = []
-        dataset.value = "sentinel-2-l2a"
+        choices = _datasets()
+        dataset.filter.list = [_dataset_label(item) for item in choices]
+        default = next((item for item in choices if item.id == "sentinel-2-l2a"), None)
+        if default is not None:
+            dataset.value = _dataset_label(default)
         extent = _parameter("extent", "Area of interest", "GPExtent")
         crs = _parameter("extent_crs", "Coordinate system of input extent", "GPSpatialReference")
         crs.value = arcpy.SpatialReference(4326)
@@ -124,30 +208,60 @@ class SearchScenes:
         limit.filter.list = [1, 1000]
         output = _parameter("output", "Output scene manifest (.geojson)", "DEFile", direction="Output")
         output.filter.list = ["geojson"]
-        return [dataset, extent, crs, start, end, cloud, limit, output]
+        download = _parameter("download_images", "Download images after search", "GPBoolean", required=False)
+        download.value = False
+        assets = _parameter("download_assets", "Asset keys (comma-separated; Sentinel-2 red,nir; Landsat red,nir08)", "GPString", required=False)
+        assets.value = "red,nir"
+        folder = _parameter("download_folder", "Image output folder", "DEFolder", required=False)
+        signing = _parameter("sign_planetary", "Sign Planetary Computer Azure asset URLs", "GPBoolean", required=False)
+        signing.value = False
+        overwrite = _parameter("overwrite_images", "Overwrite existing downloaded files", "GPBoolean", required=False)
+        overwrite.value = False
+        for parameter in (assets, folder, signing, overwrite):
+            parameter.enabled = False
+        return [dataset, extent, crs, start, end, cloud, limit, output, download, assets, folder, signing, overwrite]
 
     def isLicensed(self):
         return True
 
     def updateParameters(self, parameters):
-        return
+        # Normalize legacy raw-ID inputs before native ValueList validation.
+        selected = parameters[0].valueAsText
+        for source in _datasets():
+            if selected == source.id:
+                parameters[0].value = _dataset_label(source)
+                break
+        if len(parameters) > 8:
+            for parameter in parameters[9:13]:
+                parameter.enabled = _boolean(parameters, 8)
 
     def updateMessages(self, parameters):
         try:
-            _datasets()
+            from universal_satellite import Client
         except ImportError:
             parameters[0].setErrorMessage(
                 "Install universal-satellite in this ArcGIS Pro Python environment; see docs/gis.md."
             )
+        if _boolean(parameters, 8):
+            if not parameters[10].valueAsText:
+                parameters[10].setErrorMessage("Choose an image output folder when downloading images.")
+            try:
+                from universal_satellite.download import download_manifest
+            except ImportError:
+                parameters[8].setErrorMessage("Upgrade the universal-satellite core SDK to use image downloads.")
 
     def execute(self, parameters, messages):
         try:
-            from universal_satellite import Client
-
-            dataset_id = parameters[0].valueAsText
-            dataset = next((d for d in _datasets() if d.id == dataset_id), None)
-            if dataset is None:
-                raise ValueError(f"Unknown searchable dataset: {dataset_id}")
+            try:
+                from universal_satellite import Client
+            except ImportError as exc:
+                raise RuntimeError(
+                    "Install universal-satellite in this ArcGIS Pro Python environment before running the tool; see docs/gis.md."
+                ) from exc
+            dataset = _resolve_dataset(parameters[0].valueAsText, _datasets())
+            dataset_id = dataset.id
+            if _boolean(parameters, 8) and not parameters[10].valueAsText:
+                raise ValueError("Choose an image output folder before running the search with image downloads enabled.")
             bbox = _wgs84_bbox(_extent_value(parameters[1]), parameters[2].value)
             result = Client().search(
                 dataset=dataset_id, bbox=bbox, start=parameters[3].valueAsText,
@@ -163,9 +277,18 @@ class SearchScenes:
             if metadata.get("temporal_filter_applied") is False:
                 messages.addMessage(metadata.get("temporal_note", "Static dataset: requested dates were not applied."))
             messages.addMessage(f"Wrote {len(result['features'])} scene footprints to {output}.")
-            messages.addMessage("Raster assets were not downloaded. Use the CLI download command for selected assets.")
+            if _boolean(parameters, 8) and result["features"]:
+                _download(output, parameters[9].valueAsText, parameters[10].valueAsText,
+                          _boolean(parameters, 11), _boolean(parameters, 12), messages)
+            elif _boolean(parameters, 8):
+                messages.addWarningMessage("No scenes matched; no image assets were downloaded.")
+            else:
+                messages.addMessage("Image downloading was not selected. Use Download satellite image assets to retrieve bands to a folder.")
         except Exception as exc:
-            messages.addErrorMessage(str(exc))
+            message = str(exc)
+            if isinstance(exc, ValueError) and message.startswith("Unknown dataset"):
+                message += " Upgrade the universal-satellite core SDK in ArcGIS Pro's Python environment to use this bundled source."
+            messages.addErrorMessage(message)
             raise arcpy.ExecuteError from exc
 
 
@@ -218,6 +341,56 @@ class RasterIndex:
                 first: parameters[1].valueAsText, second: parameters[2].valueAsText
             })
             messages.addMessage(f"Wrote {name.upper()} to {output}.")
+        except Exception as exc:
+            messages.addErrorMessage(str(exc))
+            raise arcpy.ExecuteError from exc
+
+
+class DownloadAssets:
+    def __init__(self):
+        self.label = "Download satellite image assets"
+        self.description = (
+            "Download image assets from a saved scene GeoJSON into your chosen folder "
+            "as a geoprocessing job, without terminal commands. Select exact asset "
+            "keys: Sentinel-2 red,nir; Landsat red,nir08. All scenes in the manifest "
+            "are processed. Existing files are preserved unless overwrite is selected. "
+            "Optional signing supports Planetary Computer Azure assets only. "
+            "Provider authentication and native S3 requester-pays access are not "
+            "implemented by this HTTP(S) downloader. Progress and individual failures "
+            "are reported; cancellation retains completed files and removes the "
+            "interrupted temporary file. Requires the current core SDK."
+        )
+        self.canRunInBackground = True
+
+    def getParameterInfo(self):
+        manifest = _parameter("manifest", "Scene manifest (.geojson)", "DEFile")
+        manifest.filter.list = ["geojson", "json"]
+        assets = _parameter("assets", "Asset keys (comma-separated; Sentinel-2 red,nir; Landsat red,nir08)", "GPString")
+        assets.value = "red,nir"
+        folder = _parameter("folder", "Image output folder", "DEFolder")
+        signing = _parameter("sign_planetary", "Sign Planetary Computer Azure asset URLs", "GPBoolean", required=False)
+        signing.value = False
+        overwrite = _parameter("overwrite", "Overwrite existing downloaded files", "GPBoolean", required=False)
+        overwrite.value = False
+        return [manifest, assets, folder, signing, overwrite]
+
+    def isLicensed(self):
+        return True
+
+    def updateParameters(self, parameters):
+        return
+
+    def updateMessages(self, parameters):
+        try:
+            from universal_satellite.download import download_manifest
+        except ImportError:
+            parameters[0].setErrorMessage("Install or upgrade universal-satellite in ArcGIS Pro's Python environment to download images.")
+
+    def execute(self, parameters, messages):
+        try:
+            _download(parameters[0].valueAsText, parameters[1].valueAsText,
+                      parameters[2].valueAsText, _boolean(parameters, 3),
+                      _boolean(parameters, 4), messages)
         except Exception as exc:
             messages.addErrorMessage(str(exc))
             raise arcpy.ExecuteError from exc

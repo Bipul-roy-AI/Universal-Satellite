@@ -4,6 +4,10 @@
 import argparse
 from pathlib import Path
 from zipfile import ZIP_DEFLATED, ZipFile
+if __package__:
+    from .package_catalog import write_catalog
+else:
+    from package_catalog import write_catalog
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -11,7 +15,7 @@ TOOLBOX = ROOT / "gis/arcgis"
 
 
 def build(output, force=False):
-    files = [TOOLBOX / "UniversalSatellite.pyt", TOOLBOX / "INSTALL.md"]
+    files = [TOOLBOX / "UniversalSatellite.pyt", TOOLBOX / "INSTALL.md", write_catalog(TOOLBOX / "datasets.json")]
     for path in files:
         if not path.is_file():
             raise FileNotFoundError(f"Missing toolbox package input: {path}")

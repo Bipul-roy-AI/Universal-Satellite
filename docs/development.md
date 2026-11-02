@@ -12,16 +12,26 @@ python -m pip install -e ".[raster,dev]"
 python -m pytest -q
 python -m build
 python tools/package_qgis.py --force
+python tools/package_arcgis.py --force
 ```
 
 The wheel contains the Python SDK/CLI. The source distribution also contains the
-GIS adapters and documentation. The QGIS ZIP contains only the plugin; install
-the core SDK separately into QGIS's Python environment.
+GIS adapters and documentation. Both desktop ZIPs contain adapters; install or
+upgrade the core SDK separately inside the Python environment used by the GIS. Downloading assets afterward runs
+from the GUI and does not require a separate CLI environment.
 
 ## What has been checked
 
-The current suite passes 71 tests, including TOA calibration and separate TOA/SR
-dataset selection. Initial validation also passed a CLI NDVI smoke check. Tests use
+The suite covers TOA calibration, separate TOA/SR dataset selection, all 13
+toolbox menu choices with missing or older SDKs, and shared manifest-download
+behavior including progress, cancellation and per-asset failures. GUI adapters
+expose optional downloads after search and a separate manifest-download tool;
+these are checked through API stubs rather than native desktop execution.
+An HTTP smoke check served a synthetic 2 × 2 GeoTIFF locally and downloaded it
+through the shared worker into an operator-selected folder; bytes, pixels, CRS
+and final progress were verified. This checks the download backend, not native
+desktop execution or authenticated imagery retrieval.
+Initial validation also passed a CLI NDVI smoke check. Tests use
 deterministic STAC fixtures, simulated downloads, synthetic GeoTIFFs and GIS API
 stubs. The Python wheel and source distribution built successfully, and the core
 wheel was installed and exercised in a separate environment without raster extras.
@@ -57,6 +67,22 @@ accounts, signed URLs, requester-pays access, rate limits and terms vary. The
 HTTP downloader rejects unexpected HTML login pages rather than saving them as
 raster/JSON data. An HTTP/provider error is not
 an empty successful query, and the CLI does not substitute demo results.
+
+## GUI download workflow
+
+The search checkbox defaults to false. When enabled, or when the separate
+**Download satellite image assets** tool is run, the shared SDK processes the
+requested asset keys for each manifest scene into the chosen folder. Jobs use
+the GIS host's normal Processing/geoprocessing execution and progress controls;
+there is no custom detached worker queue. A cancellation keeps completed files
+and removes an interrupted temporary partial file. Per-asset failures continue
+with warnings; zero successful downloads after attempted failures is an error.
+
+Native host responsiveness, cancellation timing and authenticated imagery access
+remain to be validated. HTTP(S) public/presigned assets and Planetary Computer
+Azure signing are supported; native S3 requester-pays and interactive USGS login
+are not implemented. The [GIS guide](gis.md#download-behavior-and-access-limits)
+describes operator-visible behavior and access limits.
 
 ## Interpretation and future work
 

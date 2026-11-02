@@ -4,6 +4,10 @@
 import argparse
 from pathlib import Path
 from zipfile import ZIP_DEFLATED, ZipFile
+if __package__:
+    from .package_catalog import write_catalog
+else:
+    from package_catalog import write_catalog
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -14,10 +18,11 @@ def build(output, force=False):
     output = Path(output)
     if not (PLUGIN / "metadata.txt").is_file():
         raise FileNotFoundError(f"Plugin metadata is missing from {PLUGIN}")
+    write_catalog(PLUGIN / "datasets.json")
     output.parent.mkdir(parents=True, exist_ok=True)
     with ZipFile(output, "w" if force else "x", compression=ZIP_DEFLATED) as archive:
         for path in sorted(PLUGIN.rglob("*")):
-            if path.is_file() and path.suffix in (".py", ".txt") and "__pycache__" not in path.parts:
+            if path.is_file() and path.suffix in (".py", ".txt", ".json") and "__pycache__" not in path.parts:
                 archive.write(path, arcname=Path(PLUGIN.name) / path.relative_to(PLUGIN))
     return output
 

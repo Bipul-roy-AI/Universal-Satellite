@@ -6,7 +6,7 @@ Find historical and recent satellite scenes, download image bands, and calculate
 
 ### Searchable with these tools
 
-These 13 collections have search adapters. Dates below describe approximate record eras; actual coverage and the latest available scenes depend on the provider.
+These 13 collections have search adapters and appear as named choices with their dataset IDs in both toolboxes. The bundled menus remain visible without the core SDK; running a search still requires it. Dates below describe approximate record eras; actual coverage and the latest available scenes depend on the provider.
 
 | Data source / dataset ID | Record era | Useful for |
 | --- | --- | --- |
@@ -73,7 +73,7 @@ Requires Python 3.10 or newer. **Install the core package into the Python enviro
    ```
 
 3. In QGIS, open **Plugins → Manage and Install Plugins → Install from ZIP** and select the included ZIP (or rebuilt `dist/universal_satellite_qgis.zip`). Enable **Universal Satellite Processing**.
-4. Open the **Processing Toolbox → Universal Satellite**. You should see scene-search and raster-index tools.
+4. Open the **Processing Toolbox → Universal Satellite**. You should see scene-search, image-download and raster-index tools.
 
 ### ArcGIS Pro
 
@@ -84,64 +84,29 @@ Requires Python 3.10 or newer. **Install the core package into the Python enviro
    ```
 
 2. Extract the **ArcGIS Pro toolbox ZIP** from the download table. Open **Catalog → Toolboxes → Add Toolbox** and select `UniversalSatellite/UniversalSatellite.pyt` from the extracted folder. The source [`gis/arcgis/UniversalSatellite.pyt`](gis/arcgis/UniversalSatellite.pyt) can also be added directly.
-3. Open the **Universal Satellite** toolbox to find scene-search and raster-index tools. ArcMap/Python 2 is not supported.
+3. Open the **Universal Satellite** toolbox to find scene-search, image-download and raster-index tools. ArcMap/Python 2 is not supported.
 
 For raster indices, the GIS Python environment also needs compatible **NumPy and Rasterio** packages. Follow the [full GIS installation guide](docs/gis.md) for the optional raster extra and dependency guidance.
 
+**Updating an existing installation:** install the new adapter ZIP and upgrade the core SDK once in the GIS Python environment with `python -m pip install --upgrade "C:\path\to\Universal-Satellite"`, using your updated local repository path. Restart the GIS afterward. You do not need terminal commands for each download.
+
 Both ZIPs contain the GIS adapter, not the core SDK or a GIS runtime. To rebuild the ArcGIS ZIP from source, run `python tools/package_arcgis.py --force`; the rebuilt file is written to `dist/universal_satellite_arcgis.zip`.
 
-## 3. Run your first search
+## 3. Download imagery directly in QGIS or ArcGIS Pro
 
-In either GIS, open **Search satellite scenes (GeoJSON manifest)** and use:
+1. Open **Search satellite scenes (GeoJSON manifest)** and set your search inputs.
+2. Check **Download images after search**. It is off by default, so an ordinary search only saves scene footprints and asset links.
+3. Enter the exact **Asset keys** you want, separated by commas. For Sentinel-2 L2A, start with `red,nir`; Landsat commonly uses `red,nir08`. Other products use different keys: check the scene manifest. Every returned scene is processed for every requested key, so keep the scene limit small while testing.
+4. Choose an **Image output folder** on your computer. Enable **Sign Planetary Computer Azure asset URLs** when those assets need temporary signed links. Leave overwrite off to preserve existing files.
+5. Run the tool. The GIS Processing/geoprocessing job reports download progress and errors; use its **Cancel** control if needed. Completed downloads remain in your chosen folder; an interrupted file's temporary `.part` is removed. These jobs use the GIS application's normal background-processing controls; native desktop behavior still needs verification.
 
-| Input | Example |
-| --- | --- |
-| Dataset | Sentinel-2 Level-2A / `sentinel-2-l2a` |
-| Area | A small area around Dhaka: west 90.2, south 23.6, east 90.5, north 23.9 |
-| Coordinate system | WGS84 / EPSG:4326; specify the actual CRS if using projected map coordinates |
-| Start / end | `2024-01-01` / `2024-03-31` |
-| Maximum cloud cover | `20` percent |
-| Maximum scenes | `5` |
-| Output | A file named `scenes.geojson`, outside a geodatabase |
+**Already have a search result?** Open **Download satellite image assets**, choose the original **Scene manifest (.geojson)**, enter asset keys and choose your output folder. Run it directly in the GIS—no separate download command or terminal environment is needed. Keep the original manifest because converting footprints to a feature class can lose their nested asset metadata.
 
-For **TOA**, select **Sentinel-2 Level-1C TOA reflectance / `sentinel-2-l1c`** with the same area and dates. TOA and SR remain separate dataset choices in both toolboxes.
+Downloads can be large. Individual asset failures are reported and the remaining assets are attempted; partial success produces warnings. If every attempted download fails, the job reports an error. The tool supports public or already authorized **HTTP(S)** assets and optional Planetary Computer signing. It does not supply USGS login or requester-pays AWS access: Sentinel-2 L1C `s3://` JP2 assets and protected USGS Landsat assets still need a separate provider-supported retrieval route. A metadata search does not grant image access.
 
-Draw the area in the extent control; do not paste the SDK bbox order into QGIS's extent text field. The [GIS guide](docs/gis.md) explains the different coordinate orders.
+### Display the images and calculate an index
 
-Run the tool. In QGIS, add the GeoJSON as a vector layer. In ArcGIS Pro, use **JSON To Features** with geometry type **Polygon** to create a footprint feature class.
-
-**The result shows scene footprints and image links, not the satellite pixels.** Keep the original GeoJSON for downloading. The tool does not automatically make flood maps, classify land cover or calculate terrain derivatives.
-
-## 4. Download imagery and calculate an index
-
-For a separate command-line environment, open a terminal in the repository folder:
-
-```text
-python -m venv .venv
-```
-
-Activate with `.venv\Scripts\Activate.ps1` in Windows PowerShell, or `source .venv/bin/activate` on Linux/macOS, then run:
-
-```text
-python -m pip install -e ".[raster]"
-universal-satellite summary scenes.geojson
-universal-satellite download scenes.geojson --asset red --output downloads
-universal-satellite download scenes.geojson --asset nir --output downloads
-```
-
-These band keys are for the Sentinel-2 example; inspect the manifest for other collections. For Planetary Computer assets, add `--sign-planetary` when a temporary signed URL is needed. Add downloaded GeoTIFFs to your GIS as raster layers.
-
-Sentinel-2 L1C currently returns requester-pays `s3://` JP2 assets: retrieve them with a provider-supported AWS workflow; this downloader supports HTTP(S) only. USGS Landsat bands/MTL may require **USGS EROS** login or requester-pays AWS access. A successful metadata search does not grant image access.
-
-After retrieving a supported Landsat Level-1 reflective band and its matching MTL JSON, create a calibrated TOA GeoTIFF:
-
-```text
-universal-satellite toa --input B4.TIF --mtl MTL.json --band 4 --output red-toa.tif
-```
-
-This uses the MTL reflectance coefficients and scene-center solar elevation for Landsat 4/5/7/8/9 reflective bands. It does not perform atmospheric correction. MSS and thermal conversion are not implemented. Do not apply it to SR or already-calibrated ARD TOA products. See the [TOA workflow](docs/usage.md#choose-toa-or-surface-reflectance) for details.
-
-To run the desktop **Compute normalized-difference raster index** tool:
+Add downloaded GeoTIFFs to your map using **Add Raster Layer** in QGIS or **Add Data** in ArcGIS Pro. Then open **Compute normalized-difference raster index**:
 
 | Index | Band A | Band B | Useful for |
 | --- | --- | --- | --- |
@@ -149,18 +114,12 @@ To run the desktop **Compute normalized-difference raster index** tool:
 | NDWI | Green | NIR | Open-water contrast |
 | NBR | NIR | SWIR2 | Burn-sensitive vegetation contrast |
 
-Choose two bands from the **same acquisition**, with matching CRS, dimensions and pixel grid. Apply pixel QA/cloud masks first and check reflectance scaling. The tool applies embedded scale/offset tags but does not infer missing calibration from STAC metadata. Save to a new `.tif` file, then add it to the map. The CLI also supports MNDWI, NDMI and EVI.
+Choose two bands from the **same acquisition**, with matching CRS, dimensions and pixel grid. Apply pixel QA/cloud masks first and check reflectance scaling. The tool applies embedded scale/offset tags but does not infer missing calibration from STAC metadata. Save to a new `.tif` file, then add it to the map.
 
-For historical weather:
+Landsat Level-1 DN needs calibration before it can be treated as TOA reflectance; downloading does not perform that calibration or atmospheric correction. See the [advanced TOA, CLI and Python workflows](docs/usage.md#choose-toa-or-surface-reflectance), including historical weather and additional indices.
 
-```text
-universal-satellite weather --latitude 23.8 --longitude 90.4 --start 1981-01-01 --end 1981-01-03 --output weather.json
-```
+## 4. Screenshots and checking your installation
 
-See the [CLI and Python examples](docs/usage.md) for searching from a terminal and additional options.
-
-## 5. Screenshots and checking your installation
-
-You can capture real screenshots after installing the toolboxes. Follow the [screenshot walkthrough](docs/screenshots.md) to show a completed search, scene footprints and an optional index map, with the dataset and dates visible.
+You can capture real screenshots after installing the toolboxes. Follow the [screenshot walkthrough](docs/screenshots.md) to show a completed search, scene footprints, an optional download folder/result and an index map, with the dataset and dates visible.
 
 No native QGIS or ArcGIS screenshots are included yet. Their adapter contracts are tested, and live metadata searches for the new TOA collections have succeeded. Native desktop testing and provider-authenticated imagery downloads remain pending. See [development and validation notes](docs/development.md).
