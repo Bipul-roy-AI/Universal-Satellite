@@ -1,0 +1,13 @@
+[general]
+name=Universal Satellite Processing
+description=Search historical and recent satellite scenes and compute local raster indices.
+about=Processing tools backed by the separately installed universal-satellite Python package. Search returns a GeoJSON scene manifest; remote raster assets are not downloaded automatically.
+version=0.1.0
+qgisMinimumVersion=3.28
+author=Universal Satellite contributors
+email=
+category=Raster
+hasProcessingProvider=yes
+experimental=True
+repository=https://github.com/Bipul-roy-AI/Universal-Satellite
+homepage=https://github.com/Bipul-roy-AI/Universal-Satellite
