@@ -14,12 +14,12 @@ Searchable means an adapter is implemented against the published collection iden
 | --- | --- | --- | --- |
 | `landsat-c2-l1` | 1972–open-ended; check catalog | Sensor-dependent; 15 / 30 / 60–80 m and thermal grids | [`landsat-c2l1`](https://landsatlook.usgs.gov/stac-server/collections/landsat-c2l1) — calibrated Level-1 DN, not ready-to-use reflectance |
 | `landsat-c2-ard-toa` | 1982–open-ended; US ARD coverage | 30 m TOA reflectance tiles | [`landsat-c2ard-ta`](https://landsatlook.usgs.gov/stac-server/collections/landsat-c2ard-ta) |
-| `landsat-c2-l2` | 1982–open-ended; check catalog | 30 m reflectance; thermal varies | [`landsat-c2-l2`](https://github.com/Element84/earth-search/blob/main/docs/collections/landsat-c2-l2.md) |
+| `landsat-c2-l2` | 1982–open-ended; check catalog | 30 m reflectance; thermal varies | [`landsat-c2-l2`](https://planetarycomputer.microsoft.com/api/stac/v1/collections/landsat-c2-l2) (Planetary Computer) |
 | `sentinel-2-l1c` | 2015–open-ended; check catalog | 10 / 20 / 60 m; JP2 assets | [`sentinel-2-l1c`](https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c) — scaled TOA reflectance |
 | `sentinel-2-l2a` | 2015–open-ended; check catalog | 10 / 20 / 60 m | [`sentinel-2-l2a`](https://github.com/Element84/earth-search/blob/main/docs/collections/sentinel-2-l2a.md) |
-| `sentinel-1-grd` | 2014–open-ended; check catalog | Mode-dependent; commonly 10 m pixel spacing | [`sentinel-1-grd`](https://github.com/Element84/earth-search/blob/main/docs/collections/sentinel-1-grd.md) |
+| `sentinel-1-grd` | 2014–open-ended; check catalog | Mode-dependent; commonly 10 m pixel spacing | [`sentinel-1-grd`](https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-1-grd) (Planetary Computer) |
 | `sentinel-1-rtc` | 2014–open-ended; check catalog | 10 m pixel spacing | [`sentinel-1-rtc`](https://github.com/microsoft/PlanetaryComputerExamples/tree/main/datasets/sentinel-1-rtc) |
-| `cop-dem-glo-30` | 2011–2015 | 1 arc-second (about 30 m) | [`cop-dem-glo-30`](https://github.com/Element84/earth-search/blob/main/docs/collections/cop-dem-glo-30.md) |
+| `cop-dem-glo-30` | 2011–2015 | 1 arc-second (about 30 m) | [`cop-dem-glo-30`](https://planetarycomputer.microsoft.com/api/stac/v1/collections/cop-dem-glo-30) (Planetary Computer) |
 | `nasadem` | 2000–2000 | 1 arc-second (about 30 m) | [`nasadem`](https://github.com/microsoft/PlanetaryComputerExamples/tree/main/datasets/nasadem) |
 | `esa-worldcover` | 2020–2021 | 10 m | [`esa-worldcover`](https://github.com/microsoft/PlanetaryComputerExamples/tree/main/datasets/esa-worldcover) |
 | `jrc-gsw` | 1984–2021 | 30 m | [`jrc-gsw`](https://github.com/microsoft/PlanetaryComputerExamples/tree/main/datasets/jrc-gsw) |

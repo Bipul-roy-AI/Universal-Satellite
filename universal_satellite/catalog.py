@@ -47,10 +47,10 @@ _DATASETS = (
     ),
     Dataset(
         "landsat-c2-l2", "Landsat 4–9 Collection 2 Level-2 surface reflectance (SR)", "optical",
-        "1982-01-01", None, "30 m reflectance; thermal varies", "Element 84 Earth Search / USGS",
-        EARTH_SEARCH, "landsat-c2-l2", "Public metadata; asset hosting/authentication varies",
-        "Surface reflectance and available surface temperature. Covers TM, ETM+, OLI/TIRS; QA, scaling and sensor harmonization matter. Some USGS asset links require USGS EROS authentication.",
-        "https://github.com/Element84/earth-search/blob/main/docs/collections/landsat-c2-l2.md",
+        "1982-01-01", None, "30 m reflectance; thermal varies", "Microsoft Planetary Computer / USGS",
+        PLANETARY_COMPUTER, "landsat-c2-l2", "Public metadata; Azure assets commonly need temporary SAS signing",
+        "Surface reflectance and available surface temperature. Covers TM, ETM+, OLI/TIRS; QA, scaling and sensor harmonization matter. Assets are HTTPS Azure blobs, so enable Planetary Computer signing when downloading.",
+        "https://planetarycomputer.microsoft.com/api/stac/v1/collections/landsat-c2-l2",
         processing_level="L2", measurement="Surface reflectance (SR); available surface temperature",
     ),
     Dataset(
@@ -63,10 +63,10 @@ _DATASETS = (
     ),
     Dataset(
         "sentinel-1-grd", "Sentinel-1 ground range detected", "radar",
-        "2014-01-01", None, "Mode-dependent; commonly 10 m pixel spacing", "Element 84 Earth Search / Copernicus",
-        EARTH_SEARCH, "sentinel-1-grd", "Public metadata; inspect asset access and format",
-        "C-band SAR acquisitions. Pixel spacing is not effective spatial resolution. GRD is not interchangeable with calibrated, terrain-corrected backscatter.",
-        "https://github.com/Element84/earth-search/blob/main/docs/collections/sentinel-1-grd.md",
+        "2014-01-01", None, "Mode-dependent; commonly 10 m pixel spacing", "Microsoft Planetary Computer / Copernicus",
+        PLANETARY_COMPUTER, "sentinel-1-grd", "Public metadata; Azure assets commonly need temporary SAS signing",
+        "C-band SAR acquisitions. Pixel spacing is not effective spatial resolution. GRD is not interchangeable with calibrated, terrain-corrected backscatter. Assets are HTTPS Azure blobs, so enable Planetary Computer signing when downloading.",
+        "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-1-grd",
     ),
     Dataset(
         "sentinel-1-rtc", "Sentinel-1 radiometrically terrain-corrected", "radar",
@@ -77,10 +77,10 @@ _DATASETS = (
     ),
     Dataset(
         "cop-dem-glo-30", "Copernicus DEM GLO-30", "elevation",
-        "2011-01-01", "2015-12-31", "1 arc-second (about 30 m)", "Element 84 Earth Search / Copernicus",
-        EARTH_SEARCH, "cop-dem-glo-30", "Public metadata and COGs; provider terms apply",
-        "Static digital surface model based mainly on TanDEM-X acquisitions from 2011–2015. Not a continuously updated terrain time series.",
-        "https://github.com/Element84/earth-search/blob/main/docs/collections/cop-dem-glo-30.md",
+        "2011-01-01", "2015-12-31", "1 arc-second (about 30 m)", "Microsoft Planetary Computer / Copernicus",
+        PLANETARY_COMPUTER, "cop-dem-glo-30", "Public metadata; Azure assets commonly need temporary SAS signing; provider terms apply",
+        "Static digital surface model based mainly on TanDEM-X acquisitions from 2011–2015. Not a continuously updated terrain time series. Assets are HTTPS Azure blobs, so enable Planetary Computer signing when downloading.",
+        "https://planetarycomputer.microsoft.com/api/stac/v1/collections/cop-dem-glo-30",
         temporal=False,
     ),
     Dataset(

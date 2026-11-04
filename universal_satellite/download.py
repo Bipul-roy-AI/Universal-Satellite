@@ -57,10 +57,17 @@ def download_asset(
     except ValueError:
         valid_http, has_credentials = False, False
     if not valid_http or has_credentials:
-        raise ValueError(
+        message = (
             "Assets must use an HTTP(S) URL without embedded credentials. "
             "For s3:// assets, obtain a provider-supported HTTPS URL first."
         )
+        if parsed.scheme == "s3":
+            message += (
+                " This scene's link is s3:// (requester-pays AWS storage), which this tool "
+                "cannot fetch. Choose a source with public HTTPS assets, such as Sentinel-2 L2A, "
+                "Landsat 4-9 L2 or Sentinel-1 GRD, or retrieve this product through its provider."
+            )
+        raise ValueError(message)
     identifier = str(item.get("id", "scene"))
     # Include a stable digest so sanitizing two distinct IDs cannot collide.
     digest = hashlib.sha256(f"{identifier}\0{asset}".encode()).hexdigest()[:10]

@@ -154,6 +154,16 @@ class SearchTests(unittest.TestCase):
                 self.assertEqual(result["features"][0]["assets"], feature["assets"])
 
 
+class PublicHttpsAssetSourceTests(unittest.TestCase):
+    def test_sources_with_public_https_assets_use_planetary_computer(self):
+        # Earth Search serves these collections' assets from requester-pays s3:// links.
+        for dataset in ("landsat-c2-l2", "sentinel-1-grd", "cop-dem-glo-30"):
+            with self.subTest(dataset=dataset):
+                source = get_dataset(dataset)
+                self.assertEqual(source.endpoint, "https://planetarycomputer.microsoft.com/api/stac/v1")
+                self.assertEqual(source.collection, dataset)
+
+
 class WeatherAndSigningTests(unittest.TestCase):
     def test_weather_requests_era5_utc_and_preserves_units(self):
         raw = {"hourly": {"time": ["1981-01-01T00:00"], "temperature_2m": [20], "precipitation": [0]},

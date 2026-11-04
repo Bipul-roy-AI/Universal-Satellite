@@ -104,6 +104,16 @@ Both ZIPs contain the GIS adapter, not the core SDK or a GIS runtime. To rebuild
 
 Downloads can be large. Individual asset failures are reported and the remaining assets are attempted; partial success produces warnings. If every attempted download fails, the job reports an error. The tool supports public or already authorized **HTTP(S)** assets and optional Planetary Computer signing. It does not supply USGS login or requester-pays AWS access: Sentinel-2 L1C `s3://` JP2 assets and protected USGS Landsat assets still need a separate provider-supported retrieval route. A metadata search does not grant image access.
 
+**Which sources can the tool download?** It fetches only plain HTTPS links. A search can succeed for a source whose images it cannot then download; the failure is reported per asset (`Assets must use an HTTP(S) URL ...`).
+
+| Download status | Sources |
+| --- | --- |
+| Public HTTPS links | Sentinel-2 L2A (`red,nir`) |
+| Planetary Computer Azure links: tick **Sign Planetary Computer Azure asset URLs** | Landsat 4–9 L2 (`red,nir08`), Sentinel-1 GRD and RTC (`vv,vh`), Copernicus DEM, NASADEM, WorldCover, JRC water, MODIS |
+| Separate provider route needed (not supported here) | Sentinel-2 L1C (`s3://` JP2), Landsat Level-1 and US ARD TOA (USGS EROS login or requester-pays AWS) |
+
+Landsat 4–9 L2, Sentinel-1 GRD and Copernicus DEM now search Planetary Computer because their Earth Search links were `s3://`. If you used an earlier version, update the toolbox ZIP and the core package (see **Updating an existing installation**).
+
 ### Display the images and calculate an index
 
 Add downloaded GeoTIFFs to your map using **Add Raster Layer** in QGIS or **Add Data** in ArcGIS Pro. Then open **Compute normalized-difference raster index**:
