@@ -16,6 +16,7 @@ def write_catalog(destination):
     path = Path(destination)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps({"schema_version": 1, "datasets": records}, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    (path.parent / "asset_guide.json").write_bytes((ROOT / "universal_satellite/asset_guide.json").read_bytes())
     return path
 
 

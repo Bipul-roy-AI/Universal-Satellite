@@ -317,7 +317,7 @@ class QgisContractTests(unittest.TestCase):
             with self.assertRaisesRegex(self.module.QgsProcessingException, "No image assets were downloaded"):
                 self._download_algorithm().processAlgorithm(self._download_parameters(), None, feedback)
         feedback.reportError.assert_called_once_with("Scene scene-1, asset red: HTTP 403", fatalError=False)
-        feedback.pushInfo.assert_called_once()
+        self.assertIn("Download failed: 0 downloaded, 1 failed", feedback.pushInfo.call_args.args[0])
         self.assertIn("Download failed: 0 downloaded, 1 failed", feedback.pushInfo.call_args.args[0])
         feedback.setProgress.assert_not_called()
 

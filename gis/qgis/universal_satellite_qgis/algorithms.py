@@ -56,6 +56,44 @@ def _datasets():
     return sources
 
 
+
+def _asset_help(dataset_id=None):
+    """Offline operator guide, independent of the installed SDK version."""
+    path = Path(__file__).with_name("asset_guide.json")
+    if not path.is_file():
+        return "\nAsset guide missing: reinstall the complete toolbox ZIP; see README Asset keys."
+    guide = json.loads(path.read_text(encoding="utf-8"))
+    lines = ["Asset keys: what to enter", guide["intro"]]
+    for identifier, record in guide["datasets"].items():
+        if dataset_id and identifier != dataset_id:
+            continue
+        lines.extend([record["title"] + " [" + identifier + "]", record["note"], "Access: " + record["access"]])
+        lines.extend(key + " = " + meaning for key, meaning in record["keys"].items())
+    return "\n\n" + "\n\n".join(lines)
+
+
+def _manifest_asset_help(manifest):
+    """Describe actual advertised keys without exposing signed URLs."""
+    try:
+        data = json.loads(Path(manifest).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return "Asset preview unavailable; the downloader will validate the manifest."
+    lines = ["Available assets in this manifest (keys are case-sensitive):"]
+    seen = set()
+    for item in data.get("features", []):
+        for key, asset in item.get("assets", {}).items():
+            if not isinstance(asset, dict):
+                continue
+            description = str(asset.get("title") or "Provider asset")
+            entry = (key, description, str(asset.get("type", "unspecified media type")))
+            if entry not in seen:
+                lines.append(" = ".join(entry))
+                seen.add(entry)
+    if not seen:
+        lines.append("No downloadable assets; point observations may already be stored in the GeoJSON.")
+    return "\n".join(lines)
+
+
 def _source_help():
     lines = []
     for source in _datasets():
@@ -89,6 +127,7 @@ def _download_assets(manifest, asset_text, output, sign_planetary, overwrite, fe
         raise QgsProcessingException(
             "Install or upgrade the universal-satellite core SDK in QGIS's Python environment to download images."
         ) from exc
+    feedback.pushInfo(_manifest_asset_help(manifest))
     keys = [key.strip() for key in asset_text.split(",") if key.strip()]
     if not keys:
         raise ValueError("Enter at least one asset key from the scene manifest.")
@@ -161,7 +200,7 @@ class SearchScenes(QgsProcessingAlgorithm):
             "JRC Global Surface Water) ignore the requested dates and record this "
             "in manifest metadata. Requires universal-satellite in QGIS's Python. "
             "The bundled catalog remains visible before that SDK is installed."
-        ) + _source_help()
+        ) + _source_help() + _asset_help()
 
     def createInstance(self):
         return SearchScenes()
@@ -190,7 +229,7 @@ class SearchScenes(QgsProcessingAlgorithm):
             "DOWNLOAD", "Download images after search", defaultValue=False
         ))
         self.addParameter(QgsProcessingParameterString(
-            "DOWNLOAD_ASSETS", "Download asset keys (Sentinel-2: red,nir; Landsat: red,nir08)",
+            "DOWNLOAD_ASSETS", "Download asset keys (see Help; * = all; DEM: data)",
             defaultValue="red,nir"
         ))
         self.addParameter(QgsProcessingParameterFolderDestination(
@@ -291,7 +330,7 @@ class DownloadAssets(QgsProcessingAlgorithm):
             "keeps completed files and stops remaining transfers. Add downloaded "
             "GeoTIFFs with Add Raster Layer. Requires the updated universal-satellite "
             "core SDK in QGIS's Python environment."
-        )
+        ) + _asset_help()
 
     def createInstance(self):
         return DownloadAssets()
@@ -301,7 +340,7 @@ class DownloadAssets(QgsProcessingAlgorithm):
             "MANIFEST", "Scene manifest from Search satellite scenes (.geojson)", extension="geojson"
         ))
         self.addParameter(QgsProcessingParameterString(
-            "ASSETS", "Asset keys (comma-separated; collection-specific)", defaultValue="red,nir"
+            "ASSETS", "Asset keys (see Help for meanings; * = all; DEM: data)", defaultValue="red,nir"
         ))
         self.addParameter(QgsProcessingParameterFolderDestination(
             "OUTPUT_DIR", "Folder for downloaded satellite images"

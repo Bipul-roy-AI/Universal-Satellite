@@ -16,6 +16,7 @@ TOOLBOX = ROOT / "gis/arcgis"
 
 def build(output, force=False):
     files = [TOOLBOX / "UniversalSatellite.pyt", TOOLBOX / "INSTALL.md", TOOLBOX / "indices.json", write_catalog(TOOLBOX / "datasets.json")]
+    files.append(TOOLBOX / "asset_guide.json")
     for path in files:
         if not path.is_file():
             raise FileNotFoundError(f"Missing toolbox package input: {path}")

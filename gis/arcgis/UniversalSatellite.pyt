@@ -43,6 +43,44 @@ def _resolve_dataset(value, choices):
     raise ValueError(f"Unknown searchable dataset: {value}")
 
 
+
+def _asset_help(dataset_id=None):
+    """Offline operator guide, independent of the installed SDK version."""
+    path = Path(__file__).with_name("asset_guide.json")
+    if not path.is_file():
+        return "\nAsset guide missing: reinstall the complete toolbox ZIP; see README Asset keys."
+    guide = json.loads(path.read_text(encoding="utf-8"))
+    lines = ["Asset keys: what to enter", guide["intro"]]
+    for identifier, record in guide["datasets"].items():
+        if dataset_id and identifier != dataset_id:
+            continue
+        lines.extend([record["title"] + " [" + identifier + "]", record["note"], "Access: " + record["access"]])
+        lines.extend(key + " = " + meaning for key, meaning in record["keys"].items())
+    return "\n\n" + "\n\n".join(lines)
+
+
+def _manifest_asset_help(manifest):
+    """Describe actual advertised keys without exposing signed URLs."""
+    try:
+        data = json.loads(Path(manifest).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return "Asset preview unavailable; the downloader will validate the manifest."
+    lines = ["Available assets in this manifest (keys are case-sensitive):"]
+    seen = set()
+    for item in data.get("features", []):
+        for key, asset in item.get("assets", {}).items():
+            if not isinstance(asset, dict):
+                continue
+            description = str(asset.get("title") or "Provider asset")
+            entry = (key, description, str(asset.get("type", "unspecified media type")))
+            if entry not in seen:
+                lines.append(" = ".join(entry))
+                seen.add(entry)
+    if not seen:
+        lines.append("No downloadable assets; point observations may already be stored in the GeoJSON.")
+    return "\n".join(lines)
+
+
 def _source_help():
     lines = []
     for source in _datasets():
@@ -71,6 +109,7 @@ def _download(manifest, assets, directory, signing, overwrite, messages, **optio
     if not directory:
         raise ValueError("Choose an image output folder.")
     keys = [key.strip() for key in (assets or "").split(",") if key.strip()]
+    messages.addMessage(_manifest_asset_help(manifest))
     environment = getattr(arcpy, "env", None)
     auto_cancel = getattr(environment, "autoCancelling", None)
     if auto_cancel is not None:
@@ -182,7 +221,7 @@ class SearchScenes:
             "in the same geoprocessing job, or use Download satellite image assets "
             "with a saved manifest. Downloads respect provider authentication and "
             "do not bypass requester-pays S3 requirements."
-        ) + _source_help()
+        ) + _source_help() + _asset_help()
         self.canRunInBackground = False
 
     def getParameterInfo(self):
@@ -210,7 +249,7 @@ class SearchScenes:
         output.filter.list = ["geojson"]
         download = _parameter("download_images", "Download images after search", "GPBoolean", required=False)
         download.value = False
-        assets = _parameter("download_assets", "Asset keys (comma-separated; Sentinel-2 red,nir; Landsat red,nir08)", "GPString", required=False)
+        assets = _parameter("download_assets", "Asset keys (see tool Help for meanings; * = all; DEM: data)", "GPString", required=False)
         assets.value = "red,nir"
         folder = _parameter("download_folder", "Image output folder", "DEFolder", required=False)
         signing = _parameter("sign_planetary", "Sign Planetary Computer Azure asset URLs", "GPBoolean", required=False)
@@ -359,13 +398,13 @@ class DownloadAssets:
             "S3 requester-pays is unsupported. Progress and individual failures "
             "are reported; cancellation retains completed files and, when resumption "
             "is enabled, partial downloads. Requires the current core SDK."
-        )
+        ) + _asset_help()
         self.canRunInBackground = True
 
     def getParameterInfo(self):
         manifest = _parameter("manifest", "Scene manifest (.geojson)", "DEFile")
         manifest.filter.list = ["geojson", "json"]
-        assets = _parameter("assets", "Asset keys (comma-separated; Sentinel-2 red,nir; Landsat red,nir08)", "GPString")
+        assets = _parameter("assets", "Asset keys (see tool Help for meanings; * = all; DEM: data)", "GPString")
         assets.value = "red,nir"
         folder = _parameter("folder", "Image output folder", "DEFolder")
         signing = _parameter("sign_planetary", "Sign Planetary Computer Azure asset URLs", "GPBoolean", required=False)

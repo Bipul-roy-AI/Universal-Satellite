@@ -26,4 +26,4 @@ include = ["universal_satellite*"]
 testpaths = ["tests"]
 
 [tool.setuptools.package-data]
-universal_satellite = ["data/*.json", "data/*.txt"]
+universal_satellite = ["data/*.json", "data/*.txt", "asset_guide.json"]

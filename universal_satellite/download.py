@@ -222,7 +222,7 @@ def download_manifest(
         try:
             assets = item.get("assets", {})
             if key not in assets or not isinstance(assets[key], dict) or not isinstance(assets[key].get("href"), str):
-                raise ValueError("Scene has no valid downloadable link for the selected asset.")
+                raise ValueError("Scene has no valid downloadable link for the selected asset. Available keys: " + ", ".join(assets) + ". Enter * alone to select all advertised assets.")
             selected = {**item, "assets": {key: assets[key]}}
             if signer is not None:
                 selected = signer.sign_item(selected)
