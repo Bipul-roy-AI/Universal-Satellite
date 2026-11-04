@@ -120,6 +120,22 @@ Landsat Level-1 DN needs calibration before it can be treated as TOA reflectance
 
 ## 4. Screenshots and checking your installation
 
-You can capture real screenshots after installing the toolboxes. Follow the [screenshot walkthrough](docs/screenshots.md) to show a completed search, scene footprints, an optional download folder/result and an index map, with the dataset and dates visible.
+### ArcGIS Pro toolbox
 
-No native QGIS or ArcGIS screenshots are included yet. Their adapter contracts are tested, and live metadata searches for the new TOA collections have succeeded. Native desktop testing and provider-authenticated imagery downloads remain pending. See [development and validation notes](docs/development.md).
+The toolbox running in the ArcGIS Pro **Geoprocessing** pane:
+
+| Search satellite scenes | Compute normalized-difference raster index | Download satellite image assets |
+| --- | --- | --- |
+| ![Search satellite scenes tool in ArcGIS Pro, with the Data source dropdown listing the 13 searchable collections and their dataset IDs](docs/images/arcgis-search.png) | ![Compute normalized-difference raster index tool in ArcGIS Pro, with the Index dropdown offering ndvi, ndwi and nbr](docs/images/arcgis-index.png) | ![Download satellite image assets tool in ArcGIS Pro, showing a manifest, red,nir asset keys and a job in progress at scene 2 of 10](docs/images/arcgis-download-assets.png) |
+
+- **Search:** the **Data source** dropdown shows each named collection with its dataset ID in brackets, including the Sentinel-2 L2A, Landsat, Sentinel-1, DEM, WorldCover, JRC water and MODIS entries from section 1.
+- **Index:** choose `ndvi`, `ndwi` or `nbr`, two aligned single-band GeoTIFFs, and an output `.tif`.
+- **Download:** point the tool at an existing scene manifest, enter asset keys such as `red,nir`, and choose an output folder. The capture shows the job reporting per-scene, per-asset progress inside the Geoprocessing pane.
+
+These are tool-panel captures from ArcGIS Pro. They show the toolbox loading and the job running, not a completed search map, finished downloads or an index output. The ArcGIS Pro version and run date were not recorded.
+
+### Capture your own and check your installation
+
+Follow the [screenshot walkthrough](docs/screenshots.md) to capture a completed search, scene footprints, a download folder/result and an index map, with the dataset and dates visible.
+
+No native QGIS screenshots are included yet. Adapter contracts are tested, and live metadata searches for the new TOA collections have succeeded. Native QGIS testing, completed-result captures and provider-authenticated imagery downloads remain pending. See [development and validation notes](docs/development.md).
