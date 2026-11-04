@@ -35,6 +35,40 @@ point-profile download and polygon cropping. The original two-band index tool is
 retained for compatibility. QGIS 3.28+ / ArcGIS Pro are the intended desktop hosts;
 automated contract tests are not native desktop certification.
 
+## Desktop GIS screenshots
+
+Operator-supplied screenshots of QGIS and ArcGIS Pro. These show tool interfaces and work in progress, not confirmation that every download completed. Labels can differ between installed versions.
+
+### QGIS scene search
+
+Select a dataset, area, date range and cloud-cover limit, with optional asset downloading.
+
+![QGIS scene search: Select a dataset, area, date range and cloud-cover limit, with optional asset downloading.](docs/images/qgis-scene-search.png)
+
+### QGIS asset download
+
+Choose asset keys, an output folder, resumption and concurrent downloads; the Help panel explains the options.
+
+![QGIS asset download: Choose asset keys, an output folder, resumption and concurrent downloads; the Help panel explains the options.](docs/images/qgis-download-help.png)
+
+### QGIS normalized-difference indices
+
+The two-band tool offers NDVI, NDWI and NBR. The separate full-catalog tool provides additional spectral formulas.
+
+![QGIS normalized-difference indices: The two-band tool offers NDVI, NDWI and NBR. The separate full-catalog tool provides additional spectral formulas.](docs/images/qgis-normalized-index.png)
+
+### ArcGIS Pro dataset selection
+
+Browse optical, radar, elevation, land-cover and environmental sources.
+
+![ArcGIS Pro dataset selection: Browse optical, radar, elevation, land-cover and environmental sources.](docs/images/arcgis-dataset-selection.png)
+
+### ArcGIS Pro search and download
+
+Configure dates and cloud cover, save a manifest and monitor asset download progress.
+
+![ArcGIS Pro search and download: Configure dates and cloud cover, save a manifest and monitor asset download progress.](docs/images/arcgis-search-download.png)
+
 ## Search and download
 
 ```sh
