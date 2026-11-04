@@ -133,9 +133,3 @@ The toolbox running in the ArcGIS Pro **Geoprocessing** pane:
 - **Download:** point the tool at an existing scene manifest, enter asset keys such as `red,nir`, and choose an output folder. The capture shows the job reporting per-scene, per-asset progress inside the Geoprocessing pane.
 
 These are tool-panel captures from ArcGIS Pro. They show the toolbox loading and the job running, not a completed search map, finished downloads or an index output. The ArcGIS Pro version and run date were not recorded.
-
-### Capture your own and check your installation
-
-Follow the [screenshot walkthrough](docs/screenshots.md) to capture a completed search, scene footprints, a download folder/result and an index map, with the dataset and dates visible.
-
-No native QGIS screenshots are included yet. Adapter contracts are tested, and live metadata searches for the new TOA collections have succeeded. Native QGIS testing, completed-result captures and provider-authenticated imagery downloads remain pending. See [development and validation notes](docs/development.md).
