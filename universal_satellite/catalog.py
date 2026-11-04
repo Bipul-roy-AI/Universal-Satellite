@@ -28,6 +28,7 @@ class Dataset:
     temporal: bool = True
     processing_level: str | None = None
     measurement: str | None = None
+    adapter: str = "stac"
 
 
 _DATASETS = (
@@ -208,6 +209,69 @@ _DATASETS = (
         processing_level="ARD", measurement="Top-of-atmosphere (TOA) reflectance",
     ),
 )
+
+
+# Native provider adapters. Credentials are optional until restricted downloads.
+_CMR = "https://cmr.earthdata.nasa.gov/search/granules.json"
+_CDSE = "https://catalogue.dataspace.copernicus.eu/odata/v1/Products"
+_EXTRA = (
+    ("smap-l4", "SMAP L4 surface and root-zone soil moisture", "hydrology", "2015-03-31", "9 km", "SPL4SMGP"),
+    ("gpm-imerg", "GPM IMERG Final daily precipitation", "precipitation", "2000-06-01", "0.1 degree", "GPM_3IMERGDF"),
+    ("viirs-black-marble", "VIIRS Black Marble VNP46A2", "nightlights", "2012-01-19", "500 m", "VNP46A2"),
+    ("emit-l2a", "EMIT L2A reflectance", "hyperspectral", "2022-08-01", "About 60 m", "EMITL2ARFL"),
+    ("viirs-active-fire", "VIIRS VNP14IMG active-fire product", "fire", "2012-01-19", "375 m", "VNP14IMG"),
+    ("jason-3", "Jason-3 L2 OSTM OGDR", "altimetry", "2016-02-12", "Along-track", "JASON_3_L2_OST_OGDR_GPS"),
+    ("sentinel-6", "Sentinel-6A L2 high-rate standard NTC G01", "altimetry", "2020-11-21", "Along-track", "JASON_CS_S6A_L2_ALT_HR_STD_OST_NTC_G01"),
+)
+_DATASETS += tuple(Dataset(id, title, category, start, None, resolution,
+    "NASA Earthdata / originating mission", _CMR, short_name,
+    "Public CMR metadata; native product downloads commonly require EARTHDATA_TOKEN. Files may be HDF5/NetCDF, not GeoTIFF.",
+    "Queries real granules and returns only provider-advertised data links. Inspect units, QA and product version before analysis.",
+    "https://cmr.earthdata.nasa.gov/search/site/docs/search/api.html", adapter="cmr")
+    for id,title,category,start,resolution,short_name in _EXTRA)
+_DATASETS += (
+    Dataset("enmap-l2a", "EnMAP L2A hyperspectral", "hyperspectral", "2022-04-01", None, "30 m", "DLR EnMAP",
+        "https://geoservice.dlr.de/eoc/ogc/stac/v1", "ENMAP_HSI_L2A", "DLR account may be required for downloads",
+        "Actual DLR STAC items; wavelength/bad-band metadata must be inspected.",
+        "https://geoservice.dlr.de/eoc/ogc/stac/v1/collections/ENMAP_HSI_L2A", adapter="stac_get"),
+    Dataset("chirps-daily", "CHIRPS v2 daily precipitation", "precipitation", "1981-01-01", None, "0.05 degree", "UCSB Climate Hazards Center",
+        "https://data.chc.ucsb.edu/products/CHIRPS/v2.0/global_daily/tifs/p05", "CHIRPS-2.0", "Public HTTPS; global files may be gzip-compressed",
+        "Lists files actually present in the provider directory. Spatial coverage 50S–50N; bbox does not crop the global download.",
+        "https://www.chc.ucsb.edu/data/chirps", adapter="chirps"),
+)
+_DATASETS += tuple(Dataset(id,title,category,start,None,resolution,"Copernicus Data Space / ESA / EUMETSAT",
+    _CDSE,collection,"Public product metadata; CDSE_ACCESS_TOKEN required to download native archives",
+    "Native mission products from the official OData catalog. Product level, instrument and variables vary; downloading does not derive measurements.",
+    "https://documentation.dataspace.copernicus.eu/APIs/OData.html",adapter="cdse")
+    for id,title,category,start,resolution,collection in (
+        ("sentinel-3-products","Sentinel-3 OLCI / SLSTR native products","ocean","2016-01-01","Instrument-dependent","SENTINEL-3"),
+        ("sentinel-5p-products","Sentinel-5P TROPOMI native products","atmosphere","2018-01-01","Product-dependent","SENTINEL-5P"),
+        ("sentinel-2-products","Sentinel-2 native L1C / L2A archives","optical","2015-06-27","10 / 20 / 60 m","SENTINEL-2"),
+    ))
+
+_DATASETS += (Dataset("3dep-seamless", "USGS 3DEP seamless DEM", "elevation", "2000-01-01", None,
+    "About 10 / 30 m; inspect collection assets", "USGS / Microsoft Planetary Computer", PLANETARY_COMPUTER,
+    "3dep-seamless", "Public metadata; Azure assets may need signing", "Static elevation inventory; acquisition dates vary by tile.",
+    "https://planetarycomputer.microsoft.com/api/stac/v1/collections/3dep-seamless", temporal=False),)
+
+_DATASETS += (
+    Dataset("dynamic-world", "Google Dynamic World 10 m", "landcover", "2015-06-27", None, "10 m", "Dynamic World Project: Google / National Geographic Society / World Resources Institute",
+        "https://earthengine.googleapis.com", "GOOGLE/DYNAMICWORLD/V1", "Earth Engine credentials, authorized EE_PROJECT and optional earthengine extra required; small synchronous exports only",
+        "Returns actual scene-specific AOI-cropped label/probability GeoTIFF links. Large areas require provider batch exports.",
+        "https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1", adapter="earthengine"),
+    Dataset("hyperion", "EO-1 Hyperion archive metadata", "hyperspectral", "2000-01-01", "2017-03-30", "30 m", "USGS / NASA CMR",
+        _CMR, "USGS_EDC_EO1_Hyperion", "Archive may expose collection metadata without searchable granules; USGS retrieval may be required",
+        "Queries actual CMR granules if present. Empty results do not prove the USGS archive is empty.",
+        "https://www.usgs.gov/centers/eros/science/usgs-eros-archive-earth-observing-one-eo-1-hyperion", adapter="cmr"),
+)
+_DATASETS += tuple(Dataset(id,title,"fire",start,None,resolution,"NASA LANCE FIRMS",
+    "https://firms.modaps.eosdis.nasa.gov/api/area/csv",collection,"FIRMS_MAP_KEY required; API windows limited to 10 days",
+    "Actual hotspot observations as GeoJSON points; not a raster. The search manifest is the downloaded data; no asset download is needed.",
+    "https://firms.modaps.eosdis.nasa.gov/api/area/",adapter="firms")
+    for id,title,start,resolution,collection in (
+        ("firms-viirs","FIRMS VIIRS Suomi-NPP NRT hotspots","2012-01-01","375 m","VIIRS_SNPP_NRT"),
+        ("firms-modis","FIRMS MODIS NRT hotspots","2000-01-01","1 km","MODIS_NRT"),
+    ))
 
 
 def datasets() -> list[Dataset]:

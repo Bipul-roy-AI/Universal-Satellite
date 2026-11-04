@@ -48,6 +48,11 @@ class Client:
             raise ValueError("limit must be an integer from 1 to 1000")
         if cloud is not None and (isinstance(cloud, bool) or not isinstance(cloud, (int, float)) or not math.isfinite(cloud) or not 0 <= cloud <= 100):
             raise ValueError("cloud must be between 0 and 100")
+        if source.adapter in {"cmr", "cdse", "chirps", "firms", "earthengine"}:
+            if cloud is not None and source.adapter != "cdse":
+                raise ValueError("This provider adapter does not implement scene cloud filtering; omit cloud rather than silently ignoring it")
+            from .providers import search
+            return search(self.transport, source, bounds, start, end, limit, cloud=cloud)
         # Scene-level optical metadata is not a valid filter for SAR/DEM products.
         apply_cloud = cloud is not None and source.category == "optical"
         body = {
@@ -63,6 +68,11 @@ class Client:
             body["query"] = {"eo:cloud_cover": {"lte": cloud}}
         url, method = source.endpoint.rstrip("/") + "/search", "POST"
         initial_body = deepcopy(body)
+        if source.adapter == "stac_get":
+            params = {"bbox": ",".join(map(str,bounds)), "limit":min(limit,100)}
+            if source.temporal: params["datetime"] = initial_body["datetime"]
+            url = source.endpoint.rstrip("/") + "/collections/" + source.collection + "/items?" + urlencode(params)
+            method, body = "GET", None
         features, seen_items, seen_pages = [], set(), set()
         complete = False
         pages = 0
@@ -80,6 +90,8 @@ class Client:
             for item in page["features"]:
                 if not isinstance(item, dict) or item.get("type") != "Feature" or not item.get("id"):
                     raise ProviderError("STAC provider returned an invalid item")
+                if not isinstance(item["id"], str) or not isinstance(item.get("collection", source.collection), str) or not isinstance(item.get("properties"), dict):
+                    raise ProviderError("STAC item must have string id/collection and object properties")
                 identity = (item.get("collection", source.collection), item["id"])
                 if identity in seen_items:
                     continue
@@ -92,7 +104,10 @@ class Client:
                 accepted.append(item)
             remaining = limit - len(features)
             features.extend(accepted[:remaining])
-            next_link = next((link for link in page.get("links", []) if link.get("rel") == "next"), None)
+            links = page.get("links", [])
+            if not isinstance(links, list) or any(not isinstance(link, dict) for link in links):
+                raise ProviderError("STAC links must be an array of objects")
+            next_link = next((link for link in links if link.get("rel") == "next"), None)
             if len(features) >= limit:
                 complete = next_link is None and len(accepted) <= remaining
                 break
@@ -104,7 +119,10 @@ class Client:
             next_url = urljoin(url, next_link["href"])
             if urlsplit(next_url).scheme != "https" or urlsplit(next_url).netloc != urlsplit(source.endpoint).netloc:
                 raise ProviderError("Refusing a pagination link outside the catalog's HTTPS origin")
-            method = next_link.get("method", "GET").upper()
+            method = next_link.get("method", "GET")
+            if not isinstance(method, str):
+                raise ProviderError("Invalid STAC pagination method")
+            method = method.upper()
             if method not in ("GET", "POST"):
                 raise ProviderError("Unsupported STAC pagination method")
             if method == "POST":
@@ -178,3 +196,7 @@ class Client:
             "note": "Model reanalysis; recent dates may be unavailable due to publication lag.",
             "attribution": "Weather data by Open-Meteo.com; ERA5 by Copernicus Climate Change Service (C3S)."}
         return result
+
+    def environment(self, kind, **kwargs):
+        from .environment import profile
+        return profile(self.transport,kind,**kwargs)

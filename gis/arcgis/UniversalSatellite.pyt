@@ -63,7 +63,7 @@ def _boolean(parameters, index):
     return len(parameters) > index and str(parameters[index].valueAsText).lower() in {"true", "1"}
 
 
-def _download(manifest, assets, directory, signing, overwrite, messages):
+def _download(manifest, assets, directory, signing, overwrite, messages, **options):
     try:
         from universal_satellite.download import download_manifest
     except ImportError as exc:
@@ -85,7 +85,7 @@ def _download(manifest, assets, directory, signing, overwrite, messages):
         arcpy.SetProgressor("step", "Downloading satellite image assets", 0, 100, 1)
         result = download_manifest(
             manifest, keys, directory, sign_planetary=signing, overwrite=overwrite,
-            progress=progress, cancelled=lambda: bool(getattr(environment, "isCancelled", False)),
+            progress=progress, cancelled=lambda: bool(getattr(environment, "isCancelled", False)), **options,
         )
     finally:
         arcpy.ResetProgressor()
@@ -95,7 +95,7 @@ def _download(manifest, assets, directory, signing, overwrite, messages):
         messages.addWarningMessage(f"{failure['scene']} / {failure['asset']}: {failure['error']}")
     messages.addMessage(f"Downloaded {len(result['downloaded'])} image asset(s) to {directory}; {len(result['failed'])} failed.")
     if result["cancelled"]:
-        messages.addWarningMessage("Download cancelled. Completed files were retained; the interrupted file was removed.")
+        messages.addWarningMessage("Download cancelled. Completed files were retained; resumable partial files may remain.")
     elif result["failed"] and not result["downloaded"]:
         raise RuntimeError("No image assets were downloaded. See the provider/access errors above.")
     return result
@@ -160,7 +160,7 @@ class Toolbox:
     def __init__(self):
         self.label = "Universal Satellite"
         self.alias = "universal_satellite"
-        self.tools = [SearchScenes, RasterIndex, DownloadAssets]
+        self.tools = [CropRaster, EnvironmentalProfile, SpectralIndex, SearchScenes, RasterIndex, DownloadAssets]
 
 
 class SearchScenes:
@@ -355,10 +355,10 @@ class DownloadAssets:
             "keys: Sentinel-2 red,nir; Landsat red,nir08. All scenes in the manifest "
             "are processed. Existing files are preserved unless overwrite is selected. "
             "Optional signing supports Planetary Computer Azure assets only. "
-            "Provider authentication and native S3 requester-pays access are not "
-            "implemented by this HTTP(S) downloader. Progress and individual failures "
-            "are reported; cancellation retains completed files and removes the "
-            "interrupted temporary file. Requires the current core SDK."
+            "Provider credentials may be configured in the process environment; native "
+            "S3 requester-pays is unsupported. Progress and individual failures "
+            "are reported; cancellation retains completed files and, when resumption "
+            "is enabled, partial downloads. Requires the current core SDK."
         )
         self.canRunInBackground = True
 
@@ -372,7 +372,11 @@ class DownloadAssets:
         signing.value = False
         overwrite = _parameter("overwrite", "Overwrite existing downloaded files", "GPBoolean", required=False)
         overwrite.value = False
-        return [manifest, assets, folder, signing, overwrite]
+        resume = _parameter("resume", "Resume interrupted downloads", "GPBoolean", required=False)
+        resume.value = True
+        workers = _parameter("workers", "Concurrent asset downloads (1–16)", "GPLong", required=False)
+        workers.value = 4
+        return [manifest, assets, folder, signing, overwrite, resume, workers]
 
     def isLicensed(self):
         return True
@@ -390,7 +394,107 @@ class DownloadAssets:
         try:
             _download(parameters[0].valueAsText, parameters[1].valueAsText,
                       parameters[2].valueAsText, _boolean(parameters, 3),
-                      _boolean(parameters, 4), messages)
+                      _boolean(parameters, 4), messages, **({"resume":_boolean(parameters,5), "workers":int(parameters[6].valueAsText or 4), "retries":2} if len(parameters)>6 else {}))
         except Exception as exc:
             messages.addErrorMessage(str(exc))
             raise arcpy.ExecuteError from exc
+
+
+def _index_catalog():
+    return json.loads(Path(__file__).with_name("indices.json").read_text(encoding="utf-8"))
+
+
+class SpectralIndex:
+    def __init__(self):
+        self.label = "Compute spectral index (full catalog)"
+        self.description = "Choose an index, supply its named calibrated bands and any required constants. All rasters must be aligned. See docs/indices.md for formulas, units and sensor compatibility."
+        self.canRunInBackground = False
+
+    def getParameterInfo(self):
+        catalog = _index_catalog()
+        index = _parameter("index", "Index", "GPString")
+        index.filter.type = "ValueList"
+        index.filter.list = list(catalog["indices"])
+        index.value = "ndvi"
+        output = _parameter("output", "Index raster (.tif)", "DEFile", direction="Output")
+        output.filter.list = ["tif"]
+        constants = _parameter("constants", 'Coefficient overrides (JSON, e.g. {"L":0.5})', "GPString", required=False)
+        constants.value = "{}"
+        result = [index, output, constants]
+        for key in catalog["bands"]:
+            band = _parameter(key, key + " (aligned single-band raster)", "DEFile", required=False)
+            band.filter.list = ["tif", "tiff"]
+            result.append(band)
+        return result
+
+    def isLicensed(self): return True
+
+    def updateParameters(self, parameters):
+        catalog = _index_catalog()
+        required = catalog["indices"].get(parameters[0].valueAsText, [])
+        for key, parameter in zip(catalog["bands"], parameters[3:]):
+            parameter.enabled = key in required
+
+    def updateMessages(self, parameters): return
+
+    def execute(self, parameters, messages):
+        try:
+            from universal_satellite.raster import compute_index
+            catalog = _index_catalog()
+            name = parameters[0].valueAsText
+            required = catalog["indices"][name]
+            bands = {key:p.valueAsText for key,p in zip(catalog["bands"],parameters[3:]) if key in required and p.valueAsText}
+            compute_index(name, parameters[1].valueAsText, constants=json.loads(parameters[2].valueAsText or "{}"), **bands)
+            messages.addMessage("Wrote " + name.upper())
+        except Exception as exc:
+            messages.addErrorMessage(str(exc))
+            raise arcpy.ExecuteError from exc
+
+
+class EnvironmentalProfile:
+    def __init__(self):
+        self.label = "Download weather, air-quality or soil point profile"
+        self.description = "Download actual provider model values as JSON with units and attribution. SoilGrids REST may be unavailable. These are point profiles, not satellite images."
+        self.canRunInBackground = True
+    def isLicensed(self): return True
+    def getParameterInfo(self):
+        kind=_parameter('kind','Profile','GPString');kind.filter.type='ValueList';kind.filter.list=['forecast','air-quality','soil'];kind.value='forecast'
+        lat=_parameter('latitude','Latitude (WGS84)','GPDouble')
+        lon=_parameter('longitude','Longitude (WGS84)','GPDouble')
+        model=_parameter('model','Forecast model','GPString',required=False);model.filter.type='ValueList';model.filter.list=['ecmwf_ifs','gfs_seamless'];model.value='ecmwf_ifs'
+        depth=_parameter('depth','Soil depth','GPString',required=False);depth.filter.type='ValueList';depth.filter.list=['0-5cm','5-15cm','15-30cm','30-60cm','60-100cm','100-200cm'];depth.value='0-5cm'
+        output=_parameter('output','Profile JSON','DEFile',direction='Output');output.filter.list=['json']
+        return [kind,lat,lon,model,depth,output]
+    def updateParameters(self,parameters):
+        parameters[3].enabled=parameters[0].valueAsText=='forecast'
+        parameters[4].enabled=parameters[0].valueAsText=='soil'
+    def updateMessages(self,parameters): return
+    def execute(self,parameters,messages):
+        try:
+            from universal_satellite.client import Client
+            from universal_satellite.export import write_json
+            data=Client().environment(parameters[0].valueAsText,latitude=float(parameters[1].valueAsText),longitude=float(parameters[2].valueAsText),model=parameters[3].valueAsText or 'ecmwf_ifs',depth=parameters[4].valueAsText or '0-5cm')
+            write_json(data,parameters[5].valueAsText)
+            messages.addMessage(data['universal_satellite']['attribution'])
+        except Exception as exc:
+            messages.addErrorMessage(str(exc));raise arcpy.ExecuteError from exc
+
+
+class CropRaster:
+    def __init__(self):
+        self.label = "Crop raster or remote COG to polygon"
+        self.description = "Clip a local raster or public/signed HTTPS COG with a WGS84 GeoJSON or a Shapefile with CRS. Preserves source grid and masks. Default maximum: 25 million band-pixels. Protected products must be downloaded first."
+        self.canRunInBackground = True
+    def isLicensed(self): return True
+    def getParameterInfo(self):
+        source=_parameter('source','Local raster path or HTTPS COG URL','GPString')
+        boundary=_parameter('boundary','Polygon boundary (GeoJSON/Shapefile)','DEFile');boundary.filter.list=['geojson','json','shp']
+        output=_parameter('output','Clipped GeoTIFF','DEFile',direction='Output');output.filter.list=['tif']
+        return [source,boundary,output]
+    def execute(self,parameters,messages):
+        try:
+            from universal_satellite.raster import crop_raster
+            crop_raster(parameters[0].valueAsText,parameters[1].valueAsText,parameters[2].valueAsText)
+            messages.addMessage('Wrote clipped raster')
+        except Exception as exc:
+            messages.addErrorMessage(str(exc));raise arcpy.ExecuteError from exc

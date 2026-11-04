@@ -2,7 +2,7 @@
 
 from qgis.core import QgsProcessingProvider
 
-from .algorithms import DownloadAssets, RasterIndex, SearchScenes
+from .algorithms import DownloadAssets, RasterIndex, SearchScenes, SpectralIndex, EnvironmentalProfile, CropRaster
 
 
 class UniversalSatelliteProvider(QgsProcessingProvider):
@@ -19,3 +19,6 @@ class UniversalSatelliteProvider(QgsProcessingProvider):
         self.addAlgorithm(SearchScenes())
         self.addAlgorithm(DownloadAssets())
         self.addAlgorithm(RasterIndex())
+        self.addAlgorithm(SpectralIndex())
+        self.addAlgorithm(EnvironmentalProfile())
+        self.addAlgorithm(CropRaster())

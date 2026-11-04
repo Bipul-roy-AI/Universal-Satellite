@@ -23,8 +23,9 @@ class Transport:
             raise ProviderError("Provider requests require HTTPS")
         data = None if body is None else json.dumps(body).encode("utf-8")
         request = Request(url, data=data, method=method, headers={
-            "Accept": "application/geo+json, application/json",
-            "Content-Type": "application/json", "User-Agent": "universal-satellite/0.2.0",
+            "Accept": "application/json",
+            "User-Agent": "universal-satellite/0.3.0",
+            **({"Content-Type": "application/json"} if body is not None else {}),
         })
         for attempt in range(self.retries + 1):
             try:

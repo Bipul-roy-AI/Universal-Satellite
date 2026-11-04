@@ -1,0 +1,2840 @@
+[
+  {
+    "name": "afri1600",
+    "bands": {
+      "nir": 0.12,
+      "swir16": 0.145
+    },
+    "constants": {},
+    "expected": 0.11265646731571628
+  },
+  {
+    "name": "afri2100",
+    "bands": {
+      "nir": 0.12,
+      "swir22": 0.145
+    },
+    "constants": {},
+    "expected": 0.24675324675324675
+  },
+  {
+    "name": "andwi",
+    "bands": {
+      "blue": 0.12,
+      "green": 0.145,
+      "red": 0.16999999999999998,
+      "nir": 0.195,
+      "swir16": 0.22,
+      "swir22": 0.245
+    },
+    "constants": {},
+    "expected": -0.20547945205479454
+  },
+  {
+    "name": "ari",
+    "bands": {
+      "green": 0.12,
+      "rededge": 0.145
+    },
+    "constants": {},
+    "expected": 1.4367816091954024
+  },
+  {
+    "name": "ari2",
+    "bands": {
+      "nir": 0.12,
+      "green": 0.145,
+      "rededge": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": 0.12170385395537525
+  },
+  {
+    "name": "arvi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145,
+      "blue": 0.16999999999999998
+    },
+    "constants": {
+      "gamma": 2.0
+    },
+    "expected": -0.23809523809523808
+  },
+  {
+    "name": "atsavi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145
+    },
+    "constants": {
+      "sla": 2.0,
+      "slb": 2.0
+    },
+    "expected": 1.3499222395023327
+  },
+  {
+    "name": "avi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145
+    },
+    "constants": {},
+    "expected": null
+  },
+  {
+    "name": "aweinsh",
+    "bands": {
+      "green": 0.12,
+      "swir16": 0.145,
+      "nir": 0.16999999999999998,
+      "swir22": 0.195
+    },
+    "constants": {},
+    "expected": 0.39375000000000004
+  },
+  {
+    "name": "aweish",
+    "bands": {
+      "blue": 0.12,
+      "green": 0.145,
+      "nir": 0.16999999999999998,
+      "swir16": 0.195,
+      "swir22": 0.22
+    },
+    "constants": {},
+    "expected": -0.12
+  },
+  {
+    "name": "ashburnvi",
+    "bands": {
+      "nir08": 0.12,
+      "red": 0.145
+    },
+    "constants": {},
+    "expected": 0.095
+  },
+  {
+    "name": "BAI",
+    "bands": {
+      "red": 0.12,
+      "nir": 0.145
+    },
+    "constants": {},
+    "expected": 131.1475409836066
+  },
+  {
+    "name": "baim",
+    "bands": {
+      "nir": 0.12,
+      "swir22": 0.145
+    },
+    "constants": {},
+    "expected": 204.08465765306127
+  },
+  {
+    "name": "bais2",
+    "bands": {
+      "rededge2": 0.12,
+      "rededge3": 0.145,
+      "nir08": 0.16999999999999998,
+      "red": 0.195,
+      "swir22": 0.22
+    },
+    "constants": {},
+    "expected": 0.9470396793443208
+  },
+  {
+    "name": "bcc",
+    "bands": {
+      "blue": 0.12,
+      "red": 0.145,
+      "green": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": 0.2758620689655173
+  },
+  {
+    "name": "bi",
+    "bands": {
+      "swir16": 0.12,
+      "red": 0.145,
+      "nir": 0.16999999999999998,
+      "blue": 0.195
+    },
+    "constants": {},
+    "expected": -0.1587301587301587
+  },
+  {
+    "name": "bitm",
+    "bands": {
+      "blue": 0.12,
+      "green": 0.145,
+      "red": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": 0.14642973286415115
+  },
+  {
+    "name": "bixs",
+    "bands": {
+      "green": 0.12,
+      "red": 0.145
+    },
+    "constants": {},
+    "expected": 0.13308831654206166
+  },
+  {
+    "name": "blfei",
+    "bands": {
+      "green": 0.12,
+      "red": 0.145,
+      "swir22": 0.16999999999999998,
+      "swir16": 0.195
+    },
+    "constants": {},
+    "expected": -0.14705882352941183
+  },
+  {
+    "name": "bndvi",
+    "bands": {
+      "nir": 0.12,
+      "blue": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "brba",
+    "bands": {
+      "red": 0.12,
+      "swir16": 0.145
+    },
+    "constants": {},
+    "expected": 0.8275862068965517
+  },
+  {
+    "name": "bwdrvi",
+    "bands": {
+      "nir": 0.12,
+      "blue": 0.145
+    },
+    "constants": {
+      "alpha": 2.0
+    },
+    "expected": 0.24675324675324675
+  },
+  {
+    "name": "BaI",
+    "bands": {
+      "red": 0.12,
+      "swir16": 0.145,
+      "nir": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": 0.09500000000000003
+  },
+  {
+    "name": "cci",
+    "bands": {
+      "green1": 0.12,
+      "red": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "ci1swir",
+    "bands": {
+      "nir": 0.12,
+      "swir16": 0.145,
+      "blue": 0.16999999999999998,
+      "green": 0.195,
+      "red": 0.22
+    },
+    "constants": {},
+    "expected": 0.7008547008547008
+  },
+  {
+    "name": "ci1woswir",
+    "bands": {
+      "nir": 0.12,
+      "blue": 0.145,
+      "green": 0.16999999999999998,
+      "red": 0.195
+    },
+    "constants": {},
+    "expected": 0.7058823529411764
+  },
+  {
+    "name": "ci2swir",
+    "bands": {
+      "blue": 0.12,
+      "green": 0.145,
+      "red": 0.16999999999999998,
+      "nir": 0.195,
+      "swir16": 0.22,
+      "swir22": 0.245
+    },
+    "constants": {},
+    "expected": 0.1825
+  },
+  {
+    "name": "ci2woswir",
+    "bands": {
+      "blue": 0.12,
+      "green": 0.145,
+      "red": 0.16999999999999998,
+      "nir": 0.195
+    },
+    "constants": {},
+    "expected": 0.1575
+  },
+  {
+    "name": "cig",
+    "bands": {
+      "nir": 0.12,
+      "green": 0.145
+    },
+    "constants": {},
+    "expected": -0.1724137931034483
+  },
+  {
+    "name": "cire",
+    "bands": {
+      "nir": 0.12,
+      "rededge": 0.145
+    },
+    "constants": {},
+    "expected": -0.1724137931034483
+  },
+  {
+    "name": "closdi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145
+    },
+    "constants": {},
+    "expected": 0.3780802628490965
+  },
+  {
+    "name": "cri550",
+    "bands": {
+      "blue": 0.12,
+      "green": 0.145
+    },
+    "constants": {},
+    "expected": 1.4367816091954024
+  },
+  {
+    "name": "cri700",
+    "bands": {
+      "blue": 0.12,
+      "rededge": 0.145
+    },
+    "constants": {},
+    "expected": 1.4367816091954024
+  },
+  {
+    "name": "crswir",
+    "bands": {
+      "swir16": 0.12,
+      "nir08": 0.145,
+      "swir22": 0.16999999999999998
+    },
+    "constants": {
+      "lambdaS2": 550,
+      "lambdaN2": 600,
+      "lambdaS1": 650
+    },
+    "expected": 1.0
+  },
+  {
+    "name": "csi",
+    "bands": {
+      "nir": 0.12,
+      "swir22": 0.145
+    },
+    "constants": {},
+    "expected": 0.8275862068965517
+  },
+  {
+    "name": "csiswir",
+    "bands": {
+      "nir": 0.12,
+      "swir16": 0.145
+    },
+    "constants": {},
+    "expected": 0.1325
+  },
+  {
+    "name": "csit",
+    "bands": {
+      "nir": 0.12,
+      "swir22": 0.145,
+      "thermal": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": 48681.54158215011
+  },
+  {
+    "name": "csiwoswir",
+    "bands": {
+      "nir": 0.12
+    },
+    "constants": {},
+    "expected": 0.12
+  },
+  {
+    "name": "cvi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145,
+      "green": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": 0.6020761245674741
+  },
+  {
+    "name": "dbi",
+    "bands": {
+      "blue": 0.12,
+      "thermal1": 0.145,
+      "nir": 0.16999999999999998,
+      "red": 0.195
+    },
+    "constants": {},
+    "expected": -0.02584647195657784
+  },
+  {
+    "name": "dbsi",
+    "bands": {
+      "swir16": 0.12,
+      "green": 0.145,
+      "nir": 0.16999999999999998,
+      "red": 0.195
+    },
+    "constants": {},
+    "expected": -0.02584647195657784
+  },
+  {
+    "name": "dpdd",
+    "bands": {
+      "vv": 0.12,
+      "vh": 0.145
+    },
+    "constants": {},
+    "expected": 0.1873832970144351
+  },
+  {
+    "name": "dsi",
+    "bands": {
+      "swir16": 0.12,
+      "nir": 0.145
+    },
+    "constants": {},
+    "expected": 0.8275862068965517
+  },
+  {
+    "name": "dswi1",
+    "bands": {
+      "nir": 0.12,
+      "swir16": 0.145
+    },
+    "constants": {},
+    "expected": 0.8275862068965517
+  },
+  {
+    "name": "dswi2",
+    "bands": {
+      "swir16": 0.12,
+      "green": 0.145
+    },
+    "constants": {},
+    "expected": 0.8275862068965517
+  },
+  {
+    "name": "dswi3",
+    "bands": {
+      "swir16": 0.12,
+      "red": 0.145
+    },
+    "constants": {},
+    "expected": 0.8275862068965517
+  },
+  {
+    "name": "dswi4",
+    "bands": {
+      "green": 0.12,
+      "red": 0.145
+    },
+    "constants": {},
+    "expected": 0.8275862068965517
+  },
+  {
+    "name": "dswi5",
+    "bands": {
+      "nir": 0.12,
+      "green": 0.145,
+      "swir16": 0.16999999999999998,
+      "red": 0.195
+    },
+    "constants": {},
+    "expected": 0.726027397260274
+  },
+  {
+    "name": "dvi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145
+    },
+    "constants": {},
+    "expected": -0.024999999999999994
+  },
+  {
+    "name": "dviplus",
+    "bands": {
+      "green": 0.12,
+      "nir": 0.145,
+      "red": 0.16999999999999998
+    },
+    "constants": {
+      "lambdaN": 400,
+      "lambdaR": 450,
+      "lambdaG": 500
+    },
+    "expected": -0.03749999999999998
+  },
+  {
+    "name": "dprvihh",
+    "bands": {
+      "hv": 0.12,
+      "hh": 0.145
+    },
+    "constants": {},
+    "expected": 1.811320754716981
+  },
+  {
+    "name": "dprvivv",
+    "bands": {
+      "vh": 0.12,
+      "vv": 0.145
+    },
+    "constants": {},
+    "expected": 1.811320754716981
+  },
+  {
+    "name": "ebbi",
+    "bands": {
+      "swir16": 0.12,
+      "nir": 0.145,
+      "thermal": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.004642383454426296
+  },
+  {
+    "name": "ebi",
+    "bands": {
+      "red": 0.12,
+      "green": 0.145,
+      "blue": 0.16999999999999998
+    },
+    "constants": {
+      "epsilon": 2.0
+    },
+    "expected": 0.26153846153846155
+  },
+  {
+    "name": "embi",
+    "bands": {
+      "swir16": 0.12,
+      "swir22": 0.145,
+      "nir": 0.16999999999999998,
+      "green": 0.195
+    },
+    "constants": {},
+    "expected": -0.3834862385321101
+  },
+  {
+    "name": "endvi",
+    "bands": {
+      "nir": 0.12,
+      "green": 0.145,
+      "blue": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.12396694214876026
+  },
+  {
+    "name": "evi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145,
+      "blue": 0.16999999999999998
+    },
+    "constants": {
+      "g": 2.0,
+      "C1": 2.0,
+      "C2": 2.0,
+      "L": 2.0
+    },
+    "expected": -0.024154589371980673
+  },
+  {
+    "name": "evi2",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145
+    },
+    "constants": {
+      "g": 2.0,
+      "L": 2.0
+    },
+    "expected": -0.020259319286871958
+  },
+  {
+    "name": "eviv",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145,
+      "blue": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.010489510489510486
+  },
+  {
+    "name": "exg",
+    "bands": {
+      "green": 0.12,
+      "red": 0.145,
+      "blue": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.07499999999999998
+  },
+  {
+    "name": "exgr",
+    "bands": {
+      "green": 0.12,
+      "red": 0.145,
+      "blue": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.1435
+  },
+  {
+    "name": "exr",
+    "bands": {
+      "red": 0.12,
+      "green": 0.145
+    },
+    "constants": {},
+    "expected": 0.01100000000000001
+  },
+  {
+    "name": "fai",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145,
+      "swir16": 0.16999999999999998
+    },
+    "constants": {
+      "lambdaN": 550,
+      "lambdaR": 600,
+      "lambdaS1": 650
+    },
+    "expected": 0.0
+  },
+  {
+    "name": "fcvi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145,
+      "green": 0.16999999999999998,
+      "blue": 0.195
+    },
+    "constants": {},
+    "expected": -0.05000000000000002
+  },
+  {
+    "name": "fdi",
+    "bands": {
+      "nir": 0.12,
+      "rededge2": 0.145,
+      "swir16": 0.16999999999999998
+    },
+    "constants": {
+      "lambdaN": 550,
+      "lambdaR": 600,
+      "lambdaS1": 650
+    },
+    "expected": 0.22499999999999992
+  },
+  {
+    "name": "fwei",
+    "bands": {
+      "blue": 0.12,
+      "green": 0.145,
+      "red": 0.16999999999999998,
+      "nir": 0.195
+    },
+    "constants": {},
+    "expected": -0.14705882352941183
+  },
+  {
+    "name": "gari",
+    "bands": {
+      "nir": 0.12,
+      "green": 0.145,
+      "blue": 0.16999999999999998,
+      "red": 0.195
+    },
+    "constants": {
+      "lmb": 2.0
+    },
+    "expected": -0.23809523809523817
+  },
+  {
+    "name": "gbndvi",
+    "bands": {
+      "nir": 0.12,
+      "green": 0.145,
+      "blue": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.44827586206896547
+  },
+  {
+    "name": "gcc",
+    "bands": {
+      "green": 0.12,
+      "red": 0.145,
+      "blue": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": 0.27586206896551724
+  },
+  {
+    "name": "gdvi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145
+    },
+    "constants": {
+      "nexp": 2.0
+    },
+    "expected": -0.18701482004234296
+  },
+  {
+    "name": "gemi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145
+    },
+    "constants": {},
+    "expected": 0.26490091108682895
+  },
+  {
+    "name": "gli",
+    "bands": {
+      "green": 0.12,
+      "red": 0.145,
+      "blue": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.13513513513513511
+  },
+  {
+    "name": "gm1",
+    "bands": {
+      "rededge2": 0.12,
+      "green": 0.145
+    },
+    "constants": {},
+    "expected": 0.8275862068965517
+  },
+  {
+    "name": "gm2",
+    "bands": {
+      "rededge2": 0.12,
+      "rededge": 0.145
+    },
+    "constants": {},
+    "expected": 0.8275862068965517
+  },
+  {
+    "name": "gndvi",
+    "bands": {
+      "nir": 0.12,
+      "green": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "gosavi",
+    "bands": {
+      "nir": 0.12,
+      "green": 0.145
+    },
+    "constants": {},
+    "expected": -0.058823529411764684
+  },
+  {
+    "name": "grari",
+    "bands": {
+      "nir": 0.12,
+      "green": 0.145,
+      "red": 0.16999999999999998,
+      "blue": 0.195
+    },
+    "constants": {
+      "eta": 2.0,
+      "lmb": 2.0
+    },
+    "expected": 0.2631578947368424
+  },
+  {
+    "name": "grndvi",
+    "bands": {
+      "nir": 0.12,
+      "green": 0.145,
+      "red": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.44827586206896547
+  },
+  {
+    "name": "grvi",
+    "bands": {
+      "nir": 0.12,
+      "green": 0.145
+    },
+    "constants": {},
+    "expected": 0.8275862068965517
+  },
+  {
+    "name": "gsavi",
+    "bands": {
+      "nir": 0.12,
+      "green": 0.145
+    },
+    "constants": {
+      "L": 2.0
+    },
+    "expected": -0.03311258278145694
+  },
+  {
+    "name": "gvmi",
+    "bands": {
+      "nir": 0.12,
+      "swir22": 0.145
+    },
+    "constants": {},
+    "expected": 0.1428571428571429
+  },
+  {
+    "name": "iavi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145,
+      "blue": 0.16999999999999998
+    },
+    "constants": {
+      "gamma": 2.0
+    },
+    "expected": 0.11627906976744183
+  },
+  {
+    "name": "ibi",
+    "bands": {
+      "swir16": 0.12,
+      "nir": 0.145,
+      "red": 0.16999999999999998,
+      "green": 0.195
+    },
+    "constants": {
+      "L": 2.0
+    },
+    "expected": -23.17331812998848
+  },
+  {
+    "name": "ikaw",
+    "bands": {
+      "red": 0.12,
+      "blue": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "ipvi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145
+    },
+    "constants": {},
+    "expected": 0.45283018867924524
+  },
+  {
+    "name": "ireci",
+    "bands": {
+      "rededge3": 0.12,
+      "red": 0.145,
+      "rededge": 0.16999999999999998,
+      "rededge2": 0.195
+    },
+    "constants": {},
+    "expected": -0.02867647058823529
+  },
+  {
+    "name": "irgbvi",
+    "bands": {
+      "green": 0.12,
+      "red": 0.145,
+      "blue": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.44304776638947974
+  },
+  {
+    "name": "kdi",
+    "bands": {
+      "nir": 0.12,
+      "swir16": 0.145,
+      "rededge3": 0.16999999999999998,
+      "rededge": 0.195
+    },
+    "constants": {},
+    "expected": -0.008335526893042022
+  },
+  {
+    "name": "lswi",
+    "bands": {
+      "nir": 0.12,
+      "swir16": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "mbi",
+    "bands": {
+      "swir16": 0.12,
+      "swir22": 0.145,
+      "nir": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": 0.05172413793103453
+  },
+  {
+    "name": "mbwi",
+    "bands": {
+      "green": 0.12,
+      "red": 0.145,
+      "nir": 0.16999999999999998,
+      "swir16": 0.195,
+      "swir22": 0.22
+    },
+    "constants": {
+      "omega": 2.0
+    },
+    "expected": -0.49
+  },
+  {
+    "name": "mcari",
+    "bands": {
+      "rededge": 0.12,
+      "red": 0.145,
+      "green": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.012413793103448272
+  },
+  {
+    "name": "mcari1",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145,
+      "green": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": 0.0030000000000000027
+  },
+  {
+    "name": "mcari2",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145,
+      "green": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": 0.0025159608492604096
+  },
+  {
+    "name": "mcari705",
+    "bands": {
+      "rededge2": 0.12,
+      "rededge": 0.145,
+      "green": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.012413793103448272
+  },
+  {
+    "name": "mcariosavi",
+    "bands": {
+      "rededge": 0.12,
+      "red": 0.145,
+      "green": 0.16999999999999998,
+      "nir": 0.195
+    },
+    "constants": {},
+    "expected": -0.10701545778834715
+  },
+  {
+    "name": "mcariosavi705",
+    "bands": {
+      "rededge2": 0.12,
+      "rededge": 0.145,
+      "green": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": 0.18192627824019025
+  },
+  {
+    "name": "mgrvi",
+    "bands": {
+      "green": 0.12,
+      "red": 0.145
+    },
+    "constants": {},
+    "expected": -0.18701482004234296
+  },
+  {
+    "name": "mi",
+    "bands": {
+      "nir": 0.12,
+      "swir16": 0.145
+    },
+    "constants": {},
+    "expected": -1.436781609195402
+  },
+  {
+    "name": "mirbi",
+    "bands": {
+      "swir22": 0.12,
+      "swir16": 0.145
+    },
+    "constants": {},
+    "expected": 1.779
+  },
+  {
+    "name": "mlswi26",
+    "bands": {
+      "nir": 0.12,
+      "swir16": 0.145
+    },
+    "constants": {},
+    "expected": 0.7170731707317074
+  },
+  {
+    "name": "mlswi27",
+    "bands": {
+      "nir": 0.12,
+      "swir22": 0.145
+    },
+    "constants": {},
+    "expected": 0.7170731707317074
+  },
+  {
+    "name": "mndvi",
+    "bands": {
+      "nir": 0.12,
+      "swir22": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "mndwi",
+    "bands": {
+      "green": 0.12,
+      "swir16": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "mnli",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145
+    },
+    "constants": {
+      "L": 2.0
+    },
+    "expected": -0.18143928869130316
+  },
+  {
+    "name": "mrbvi",
+    "bands": {
+      "red": 0.12,
+      "blue": 0.145
+    },
+    "constants": {},
+    "expected": -0.18701482004234296
+  },
+  {
+    "name": "msavi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145
+    },
+    "constants": {},
+    "expected": -0.03909028213136323
+  },
+  {
+    "name": "msi",
+    "bands": {
+      "swir16": 0.12,
+      "nir": 0.145
+    },
+    "constants": {},
+    "expected": 0.8275862068965517
+  },
+  {
+    "name": "msr",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145
+    },
+    "constants": {},
+    "expected": -0.12753608187321183
+  },
+  {
+    "name": "MSR705",
+    "bands": {
+      "rededge2": 0.12,
+      "rededge": 0.145
+    },
+    "constants": {},
+    "expected": -0.12753608187321183
+  },
+  {
+    "name": "mtci",
+    "bands": {
+      "rededge2": 0.12,
+      "rededge": 0.145,
+      "red": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": 1.0
+  },
+  {
+    "name": "mtvi1",
+    "bands": {
+      "nir": 0.12,
+      "green": 0.145,
+      "red": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.11099999999999996
+  },
+  {
+    "name": "mtvi2",
+    "bands": {
+      "nir": 0.12,
+      "green": 0.145,
+      "red": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.08995427817547781
+  },
+  {
+    "name": "mvi",
+    "bands": {
+      "nir": 0.12,
+      "green": 0.145,
+      "swir16": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -1.0
+  },
+  {
+    "name": "muwir",
+    "bands": {
+      "blue": 0.12,
+      "green": 0.145,
+      "nir": 0.16999999999999998,
+      "swir22": 0.195,
+      "swir16": 0.22
+    },
+    "constants": {},
+    "expected": 0.12999013683184985
+  },
+  {
+    "name": "nbai",
+    "bands": {
+      "swir22": 0.12,
+      "swir16": 0.145,
+      "green": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.7533252720677146
+  },
+  {
+    "name": "nbli",
+    "bands": {
+      "red": 0.12,
+      "thermal": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "nblioli",
+    "bands": {
+      "red": 0.12,
+      "thermal1": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "nbr",
+    "bands": {
+      "nir": 0.12,
+      "swir22": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "nbr2",
+    "bands": {
+      "swir16": 0.12,
+      "swir22": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "nbrswir",
+    "bands": {
+      "swir22": 0.12,
+      "swir16": 0.145
+    },
+    "constants": {},
+    "expected": -0.1232876712328767
+  },
+  {
+    "name": "nbrt1",
+    "bands": {
+      "nir": 0.12,
+      "swir22": 0.145,
+      "thermal": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": 0.9999589175105695
+  },
+  {
+    "name": "nbrt2",
+    "bands": {
+      "nir": 0.12,
+      "thermal": 0.145,
+      "swir22": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": 0.9999589175105694
+  },
+  {
+    "name": "nbrt3",
+    "bands": {
+      "nir": 0.12,
+      "thermal": 0.145,
+      "swir22": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.17247241672428446
+  },
+  {
+    "name": "nbrplus",
+    "bands": {
+      "swir22": 0.12,
+      "nir08": 0.145,
+      "green": 0.16999999999999998,
+      "blue": 0.195
+    },
+    "constants": {},
+    "expected": -0.6190476190476191
+  },
+  {
+    "name": "nbsims",
+    "bands": {
+      "green": 0.12,
+      "red": 0.145,
+      "nir": 0.16999999999999998,
+      "blue": 0.195,
+      "swir22": 0.22,
+      "swir16": 0.245
+    },
+    "constants": {},
+    "expected": -3.546733333333334
+  },
+  {
+    "name": "nbui",
+    "bands": {
+      "swir16": 0.12,
+      "nir": 0.145,
+      "thermal": 0.16999999999999998,
+      "red": 0.195,
+      "green": 0.22
+    },
+    "constants": {
+      "L": 2.0
+    },
+    "expected": -0.22183695359017294
+  },
+  {
+    "name": "nd705",
+    "bands": {
+      "rededge2": 0.12,
+      "rededge": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "ndbi",
+    "bands": {
+      "swir16": 0.12,
+      "nir": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "ndbai",
+    "bands": {
+      "swir16": 0.12,
+      "thermal": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "ndci",
+    "bands": {
+      "rededge": 0.12,
+      "red": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "nddi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145,
+      "green": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -3.4166666666666665
+  },
+  {
+    "name": "ndgi",
+    "bands": {
+      "green": 0.12,
+      "nir": 0.145,
+      "red": 0.16999999999999998
+    },
+    "constants": {
+      "lambdaN": 400,
+      "lambdaR": 450,
+      "lambdaG": 500
+    },
+    "expected": -0.12396694214876026
+  },
+  {
+    "name": "ndglai",
+    "bands": {
+      "green": 0.12,
+      "red": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "ndii",
+    "bands": {
+      "nir": 0.12,
+      "swir16": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "ndisib",
+    "bands": {
+      "thermal": 0.12,
+      "blue": 0.145,
+      "nir": 0.16999999999999998,
+      "swir16": 0.195
+    },
+    "constants": {},
+    "expected": -0.17241379310344832
+  },
+  {
+    "name": "ndisig",
+    "bands": {
+      "thermal": 0.12,
+      "green": 0.145,
+      "nir": 0.16999999999999998,
+      "swir16": 0.195
+    },
+    "constants": {},
+    "expected": -0.17241379310344832
+  },
+  {
+    "name": "ndisimndwi",
+    "bands": {
+      "thermal": 0.12,
+      "green": 0.145,
+      "swir16": 0.16999999999999998,
+      "nir": 0.195
+    },
+    "constants": {},
+    "expected": 0.11518131530424096
+  },
+  {
+    "name": "ndisindwi",
+    "bands": {
+      "thermal": 0.12,
+      "green": 0.145,
+      "nir": 0.16999999999999998,
+      "swir16": 0.195
+    },
+    "constants": {},
+    "expected": 0.11518131530424096
+  },
+  {
+    "name": "ndisir",
+    "bands": {
+      "thermal": 0.12,
+      "red": 0.145,
+      "nir": 0.16999999999999998,
+      "swir16": 0.195
+    },
+    "constants": {},
+    "expected": -0.17241379310344832
+  },
+  {
+    "name": "ndmi",
+    "bands": {
+      "nir": 0.12,
+      "swir16": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "ndpi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145,
+      "swir16": 0.16999999999999998
+    },
+    "constants": {
+      "alpha": 2.0
+    },
+    "expected": 0.0
+  },
+  {
+    "name": "ndpoli",
+    "bands": {
+      "vv": 0.12,
+      "vh": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "ndponi",
+    "bands": {
+      "swir16": 0.12,
+      "green": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "ndrei",
+    "bands": {
+      "nir": 0.12,
+      "rededge": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "ndsi",
+    "bands": {
+      "green": 0.12,
+      "swir16": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "ndsii",
+    "bands": {
+      "green": 0.12,
+      "nir": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "ndsiitm",
+    "bands": {
+      "red": 0.12,
+      "swir16": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "ndsiwv",
+    "bands": {
+      "green": 0.12,
+      "yellow": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "ndsinw",
+    "bands": {
+      "nir": 0.12,
+      "swir16": 0.145
+    },
+    "constants": {
+      "beta": 2.0
+    },
+    "expected": -7.641509433962264
+  },
+  {
+    "name": "ndswir",
+    "bands": {
+      "nir": 0.12,
+      "swir16": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "ndsaii",
+    "bands": {
+      "red": 0.12,
+      "swir16": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "ndsoi",
+    "bands": {
+      "swir22": 0.12,
+      "green": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "ndti",
+    "bands": {
+      "red": 0.12,
+      "green": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "ndti4re",
+    "bands": {
+      "swir16": 0.12,
+      "swir22": 0.145,
+      "nir": 0.16999999999999998,
+      "rededge3": 0.195
+    },
+    "constants": {
+      "gamma": 2.0
+    },
+    "expected": -0.12018609459808725
+  },
+  {
+    "name": "ndtilli",
+    "bands": {
+      "swir16": 0.12,
+      "swir22": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "ndvi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "ndvi4re",
+    "bands": {
+      "rededge3": 0.12,
+      "rededge2": 0.145,
+      "red": 0.16999999999999998,
+      "rededge": 0.195
+    },
+    "constants": {
+      "alpha": 2.0,
+      "beta": 2.0
+    },
+    "expected": -0.2083333333333332
+  },
+  {
+    "name": "ndvi705",
+    "bands": {
+      "rededge2": 0.12,
+      "rededge": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "ndvimndwi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145,
+      "green": 0.16999999999999998,
+      "swir16": 0.195
+    },
+    "constants": {},
+    "expected": -0.02584647195657784
+  },
+  {
+    "name": "ndvit",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145,
+      "thermal": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": 0.9999589175105695
+  },
+  {
+    "name": "ndwi",
+    "bands": {
+      "green": 0.12,
+      "nir": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "ndwins",
+    "bands": {
+      "green": 0.12,
+      "nir": 0.145
+    },
+    "constants": {
+      "alpha": 2.0
+    },
+    "expected": -0.641509433962264
+  },
+  {
+    "name": "ndyi",
+    "bands": {
+      "green": 0.12,
+      "blue": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "ngrdi",
+    "bands": {
+      "green": 0.12,
+      "red": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "nhfd",
+    "bands": {
+      "rededge": 0.12,
+      "aerosol": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "nirv",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145
+    },
+    "constants": {},
+    "expected": -0.01132075471698113
+  },
+  {
+    "name": "nirvh2",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145
+    },
+    "constants": {
+      "k": 2.0,
+      "lambdaN": 550,
+      "lambdaR": 600
+    },
+    "expected": 99.975
+  },
+  {
+    "name": "nirvp",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145
+    },
+    "constants": {
+      "PAR": 2.0
+    },
+    "expected": -0.02264150943396226
+  },
+  {
+    "name": "nli",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145
+    },
+    "constants": {},
+    "expected": -0.8193224592220828
+  },
+  {
+    "name": "nmdi",
+    "bands": {
+      "nir": 0.12,
+      "swir16": 0.145,
+      "swir22": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": 1.526315789473684
+  },
+  {
+    "name": "npci",
+    "bands": {
+      "red": 0.12,
+      "aerosol": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "nrfig",
+    "bands": {
+      "green": 0.12,
+      "swir22": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "nrfir",
+    "bands": {
+      "red": 0.12,
+      "swir22": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "nsds",
+    "bands": {
+      "swir16": 0.12,
+      "swir22": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "nsdsi1",
+    "bands": {
+      "swir16": 0.12,
+      "swir22": 0.145
+    },
+    "constants": {},
+    "expected": -0.2083333333333333
+  },
+  {
+    "name": "nsdsi2",
+    "bands": {
+      "swir16": 0.12,
+      "swir22": 0.145
+    },
+    "constants": {},
+    "expected": -0.17241379310344826
+  },
+  {
+    "name": "nsdsi3",
+    "bands": {
+      "swir16": 0.12,
+      "swir22": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "nstv1",
+    "bands": {
+      "nir": 0.12,
+      "swir22": 0.145,
+      "thermal": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.0160377358490566
+  },
+  {
+    "name": "nstv2",
+    "bands": {
+      "nir": 0.12,
+      "swir22": 0.145,
+      "thermal": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.44827586206896547
+  },
+  {
+    "name": "nwi",
+    "bands": {
+      "blue": 0.12,
+      "nir": 0.145,
+      "swir16": 0.16999999999999998,
+      "swir22": 0.195
+    },
+    "constants": {},
+    "expected": -0.6190476190476191
+  },
+  {
+    "name": "normg",
+    "bands": {
+      "green": 0.12,
+      "nir": 0.145,
+      "red": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": 0.27586206896551724
+  },
+  {
+    "name": "normnir",
+    "bands": {
+      "nir": 0.12,
+      "green": 0.145,
+      "red": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": 0.27586206896551724
+  },
+  {
+    "name": "normr",
+    "bands": {
+      "red": 0.12,
+      "nir": 0.145,
+      "green": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": 0.2758620689655173
+  },
+  {
+    "name": "ocvi",
+    "bands": {
+      "nir": 0.12,
+      "green": 0.145,
+      "red": 0.16999999999999998
+    },
+    "constants": {
+      "cexp": 2.0
+    },
+    "expected": 1.1375620156627986
+  },
+  {
+    "name": "osavi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145
+    },
+    "constants": {},
+    "expected": -0.058823529411764684
+  },
+  {
+    "name": "osi",
+    "bands": {
+      "green": 0.12,
+      "red": 0.145,
+      "blue": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": 1.558823529411765
+  },
+  {
+    "name": "pi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145
+    },
+    "constants": {},
+    "expected": 0.45283018867924524
+  },
+  {
+    "name": "pisi",
+    "bands": {
+      "blue": 0.12,
+      "nir": 0.145
+    },
+    "constants": {},
+    "expected": 0.0901465
+  },
+  {
+    "name": "psri",
+    "bands": {
+      "red": 0.12,
+      "blue": 0.145,
+      "rededge2": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.14705882352941174
+  },
+  {
+    "name": "qprvi",
+    "bands": {
+      "hv": 0.12,
+      "hh": 0.145,
+      "vv": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": 1.7297297297297298
+  },
+  {
+    "name": "rcc",
+    "bands": {
+      "red": 0.12,
+      "green": 0.145,
+      "blue": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": 0.27586206896551724
+  },
+  {
+    "name": "rdvi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145
+    },
+    "constants": {},
+    "expected": -0.0485642931178632
+  },
+  {
+    "name": "redsi",
+    "bands": {
+      "rededge3": 0.12,
+      "red": 0.145,
+      "rededge": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -13.620689655172413
+  },
+  {
+    "name": "rendvi",
+    "bands": {
+      "rededge2": 0.12,
+      "rededge": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "rfdi",
+    "bands": {
+      "hh": 0.12,
+      "hv": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "rgbvi",
+    "bands": {
+      "green": 0.12,
+      "blue": 0.145,
+      "red": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.262483994878361
+  },
+  {
+    "name": "rgri",
+    "bands": {
+      "red": 0.12,
+      "green": 0.145
+    },
+    "constants": {},
+    "expected": 0.8275862068965517
+  },
+  {
+    "name": "ri",
+    "bands": {
+      "red": 0.12,
+      "green": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "ri4xs",
+    "bands": {
+      "red": 0.12,
+      "green": 0.145
+    },
+    "constants": {},
+    "expected": 32.57545445162532
+  },
+  {
+    "name": "rndvi",
+    "bands": {
+      "red": 0.12,
+      "nir": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "rvi",
+    "bands": {
+      "rededge2": 0.12,
+      "red": 0.145
+    },
+    "constants": {},
+    "expected": 0.8275862068965517
+  },
+  {
+    "name": "rvi4re",
+    "bands": {
+      "rededge3": 0.12,
+      "rededge2": 0.145,
+      "red": 0.16999999999999998,
+      "rededge": 0.195
+    },
+    "constants": {
+      "alpha": 2.0,
+      "beta": 2.0
+    },
+    "expected": 0.6551724137931036
+  },
+  {
+    "name": "rwi",
+    "bands": {
+      "green": 0.12,
+      "swir16": 0.145
+    },
+    "constants": {
+      "n": 2.0
+    },
+    "expected": 0.225018689727602
+  },
+  {
+    "name": "s2rep",
+    "bands": {
+      "rededge3": 0.12,
+      "red": 0.145,
+      "rededge": 0.16999999999999998,
+      "rededge2": 0.195
+    },
+    "constants": {},
+    "expected": 652.5000000000001
+  },
+  {
+    "name": "s2wi",
+    "bands": {
+      "rededge": 0.12,
+      "swir22": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "s3",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145,
+      "swir16": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.03903708523096941
+  },
+  {
+    "name": "sarvi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145,
+      "blue": 0.16999999999999998
+    },
+    "constants": {
+      "L": 2.0,
+      "gamma": 2.0
+    },
+    "expected": -0.09719222462203021
+  },
+  {
+    "name": "savi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145
+    },
+    "constants": {
+      "L": 2.0
+    },
+    "expected": -0.03311258278145694
+  },
+  {
+    "name": "savi2",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145
+    },
+    "constants": {
+      "slb": 2.0,
+      "sla": 2.0
+    },
+    "expected": 0.10480349344978165
+  },
+  {
+    "name": "savi4re",
+    "bands": {
+      "rededge3": 0.12,
+      "rededge2": 0.145,
+      "red": 0.16999999999999998,
+      "rededge": 0.195
+    },
+    "constants": {
+      "alpha": 2.0,
+      "beta": 2.0
+    },
+    "expected": -0.08064516129032252
+  },
+  {
+    "name": "savit",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145,
+      "thermal": 0.16999999999999998
+    },
+    "constants": {
+      "L": 2.0
+    },
+    "expected": 0.16980763510574506
+  },
+  {
+    "name": "scowi",
+    "bands": {
+      "blue": 0.12,
+      "green": 0.145,
+      "nir": 0.16999999999999998,
+      "swir16": 0.195,
+      "swir22": 0.22
+    },
+    "constants": {},
+    "expected": -0.18624999999999997
+  },
+  {
+    "name": "sevi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145
+    },
+    "constants": {
+      "fdelta": 2.0
+    },
+    "expected": 14.620689655172415
+  },
+  {
+    "name": "si",
+    "bands": {
+      "blue": 0.12,
+      "green": 0.145,
+      "red": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": 0.8547562658081349
+  },
+  {
+    "name": "sipi",
+    "bands": {
+      "nir": 0.12,
+      "aerosol": 0.145,
+      "red": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": 0.5
+  },
+  {
+    "name": "slavi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145,
+      "swir22": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": 0.380952380952381
+  },
+  {
+    "name": "sndti",
+    "bands": {
+      "swir16": 0.12,
+      "swir22": 0.145
+    },
+    "constants": {
+      "L": 2.0
+    },
+    "expected": -0.03311258278145694
+  },
+  {
+    "name": "sndti4re",
+    "bands": {
+      "swir16": 0.12,
+      "swir22": 0.145,
+      "nir": 0.16999999999999998,
+      "rededge3": 0.195
+    },
+    "constants": {
+      "gamma": 2.0
+    },
+    "expected": -0.0424213467691728
+  },
+  {
+    "name": "sr",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145
+    },
+    "constants": {},
+    "expected": 0.8275862068965517
+  },
+  {
+    "name": "sr2",
+    "bands": {
+      "nir": 0.12,
+      "green": 0.145
+    },
+    "constants": {},
+    "expected": 0.8275862068965517
+  },
+  {
+    "name": "sr3",
+    "bands": {
+      "nir08": 0.12,
+      "green": 0.145,
+      "rededge": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": 4.868154158215011
+  },
+  {
+    "name": "sr555",
+    "bands": {
+      "rededge2": 0.12,
+      "green": 0.145
+    },
+    "constants": {},
+    "expected": 0.8275862068965517
+  },
+  {
+    "name": "sr705",
+    "bands": {
+      "rededge2": 0.12,
+      "rededge": 0.145
+    },
+    "constants": {},
+    "expected": 0.8275862068965517
+  },
+  {
+    "name": "srvi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145,
+      "green": 0.16999999999999998,
+      "swir16": 0.195
+    },
+    "constants": {},
+    "expected": -0.43575418994413395
+  },
+  {
+    "name": "srwi",
+    "bands": {
+      "green": 0.12,
+      "blue": 0.145,
+      "nir": 0.16999999999999998,
+      "swir16": 0.195
+    },
+    "constants": {},
+    "expected": -0.1587301587301587
+  },
+  {
+    "name": "sti",
+    "bands": {
+      "swir16": 0.12,
+      "swir22": 0.145
+    },
+    "constants": {},
+    "expected": 0.8275862068965517
+  },
+  {
+    "name": "sti4re",
+    "bands": {
+      "swir16": 0.12,
+      "swir22": 0.145,
+      "nir": 0.16999999999999998,
+      "rededge3": 0.195
+    },
+    "constants": {
+      "gamma": 2.0
+    },
+    "expected": 0.7833775419982317
+  },
+  {
+    "name": "swi",
+    "bands": {
+      "green": 0.12,
+      "nir": 0.145,
+      "swir16": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.03593890386343216
+  },
+  {
+    "name": "swm",
+    "bands": {
+      "blue": 0.12,
+      "green": 0.145,
+      "nir": 0.16999999999999998,
+      "swir16": 0.195
+    },
+    "constants": {},
+    "expected": 0.726027397260274
+  },
+  {
+    "name": "seli",
+    "bands": {
+      "nir08": 0.12,
+      "rededge": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "tcari",
+    "bands": {
+      "rededge": 0.12,
+      "red": 0.145,
+      "green": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.050172413793103436
+  },
+  {
+    "name": "tcariosavi",
+    "bands": {
+      "rededge": 0.12,
+      "red": 0.145,
+      "green": 0.16999999999999998,
+      "nir": 0.195
+    },
+    "constants": {},
+    "expected": -0.43252080856123637
+  },
+  {
+    "name": "tcariosavi705",
+    "bands": {
+      "rededge2": 0.12,
+      "rededge": 0.145,
+      "green": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": 0.7352853745541024
+  },
+  {
+    "name": "tci",
+    "bands": {
+      "rededge": 0.12,
+      "green": 0.145,
+      "red": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.06150630189063021
+  },
+  {
+    "name": "tdvi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145
+    },
+    "constants": {},
+    "expected": -0.04618030493781116
+  },
+  {
+    "name": "tgi",
+    "bands": {
+      "red": 0.12,
+      "green": 0.145,
+      "blue": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.6249999999999996
+  },
+  {
+    "name": "trrvi",
+    "bands": {
+      "rededge2": 0.12,
+      "red": 0.145,
+      "nir": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.0874028856825749
+  },
+  {
+    "name": "tsavi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145
+    },
+    "constants": {
+      "sla": 2.0,
+      "slb": 2.0
+    },
+    "expected": 1.2005532503457814
+  },
+  {
+    "name": "ttvi",
+    "bands": {
+      "rededge3": 0.12,
+      "rededge2": 0.145,
+      "nir08": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -2.0999999999999996
+  },
+  {
+    "name": "tvi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145
+    },
+    "constants": {},
+    "expected": 0.6369147331931415
+  },
+  {
+    "name": "twi",
+    "bands": {
+      "rededge": 0.12,
+      "rededge2": 0.145,
+      "green": 0.16999999999999998,
+      "swir22": 0.195,
+      "blue": 0.22,
+      "nir": 0.245
+    },
+    "constants": {},
+    "expected": -0.4119118522930316
+  },
+  {
+    "name": "trivi",
+    "bands": {
+      "nir": 0.12,
+      "green": 0.145,
+      "red": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -3.999999999999999
+  },
+  {
+    "name": "ui",
+    "bands": {
+      "swir22": 0.12,
+      "nir": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "vari",
+    "bands": {
+      "green": 0.12,
+      "red": 0.145,
+      "blue": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.263157894736842
+  },
+  {
+    "name": "vari700",
+    "bands": {
+      "rededge": 0.12,
+      "red": 0.145,
+      "blue": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.0857142857142856
+  },
+  {
+    "name": "vddpi",
+    "bands": {
+      "vv": 0.12,
+      "vh": 0.145
+    },
+    "constants": {},
+    "expected": 2.2083333333333335
+  },
+  {
+    "name": "vhvvd",
+    "bands": {
+      "vh": 0.12,
+      "vv": 0.145
+    },
+    "constants": {},
+    "expected": -0.024999999999999994
+  },
+  {
+    "name": "vhvvp",
+    "bands": {
+      "vh": 0.12,
+      "vv": 0.145
+    },
+    "constants": {},
+    "expected": 0.0174
+  },
+  {
+    "name": "vhvvr",
+    "bands": {
+      "vh": 0.12,
+      "vv": 0.145
+    },
+    "constants": {},
+    "expected": 0.8275862068965517
+  },
+  {
+    "name": "vi6t",
+    "bands": {
+      "nir": 0.12,
+      "thermal": 0.145
+    },
+    "constants": {},
+    "expected": 0.9997583625311941
+  },
+  {
+    "name": "vi700",
+    "bands": {
+      "rededge": 0.12,
+      "red": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "vibi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145,
+      "swir16": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -1.208333333333333
+  },
+  {
+    "name": "vig",
+    "bands": {
+      "green": 0.12,
+      "red": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "vvvhd",
+    "bands": {
+      "vv": 0.12,
+      "vh": 0.145
+    },
+    "constants": {},
+    "expected": -0.024999999999999994
+  },
+  {
+    "name": "vvvhr",
+    "bands": {
+      "vv": 0.12,
+      "vh": 0.145
+    },
+    "constants": {},
+    "expected": 0.8275862068965517
+  },
+  {
+    "name": "vvvhs",
+    "bands": {
+      "vv": 0.12,
+      "vh": 0.145
+    },
+    "constants": {},
+    "expected": 0.265
+  },
+  {
+    "name": "vgnirbi",
+    "bands": {
+      "green": 0.12,
+      "nir": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "vrnirbi",
+    "bands": {
+      "red": 0.12,
+      "nir": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "wci1",
+    "bands": {
+      "blue": 0.12,
+      "red": 0.145,
+      "rededge": 0.16999999999999998,
+      "green": 0.195,
+      "nir": 0.22
+    },
+    "constants": {
+      "epsilon": 2.0
+    },
+    "expected": -0.00865231050035978
+  },
+  {
+    "name": "wci2",
+    "bands": {
+      "blue": 0.12,
+      "green": 0.145,
+      "rededge": 0.16999999999999998,
+      "red": 0.195,
+      "nir": 0.22
+    },
+    "constants": {
+      "epsilon": 2.0
+    },
+    "expected": -0.04329557347780582
+  },
+  {
+    "name": "wdrvi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145
+    },
+    "constants": {
+      "alpha": 2.0
+    },
+    "expected": 0.24675324675324675
+  },
+  {
+    "name": "wdvi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145
+    },
+    "constants": {
+      "sla": 2.0
+    },
+    "expected": -0.16999999999999998
+  },
+  {
+    "name": "wi1",
+    "bands": {
+      "green": 0.12,
+      "swir22": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "wi2",
+    "bands": {
+      "blue": 0.12,
+      "swir22": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "wi2015",
+    "bands": {
+      "green": 0.12,
+      "red": 0.145,
+      "nir": 0.16999999999999998,
+      "swir16": 0.195,
+      "swir22": 0.22
+    },
+    "constants": {},
+    "expected": -13.619599999999998
+  },
+  {
+    "name": "wri",
+    "bands": {
+      "green": 0.12,
+      "red": 0.145,
+      "nir": 0.16999999999999998,
+      "swir16": 0.195
+    },
+    "constants": {},
+    "expected": 0.726027397260274
+  },
+  {
+    "name": "bnirv",
+    "bands": {
+      "nir": 0.12,
+      "blue": 0.145
+    },
+    "constants": {},
+    "expected": -0.01132075471698113
+  },
+  {
+    "name": "kevi",
+    "bands": {
+      "kNN": 0.12,
+      "kNR": 0.145,
+      "kNB": 0.16999999999999998,
+      "kNL": 0.195
+    },
+    "constants": {
+      "g": 2.0,
+      "C1": 2.0,
+      "C2": 2.0
+    },
+    "expected": -0.18867924528301883
+  },
+  {
+    "name": "kipvi",
+    "bands": {
+      "kNN": 0.12,
+      "kNR": 0.145
+    },
+    "constants": {},
+    "expected": 0.45283018867924524
+  },
+  {
+    "name": "kndvi",
+    "bands": {
+      "kNN": 0.12,
+      "kNR": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "krvi",
+    "bands": {
+      "kNN": 0.12,
+      "kNR": 0.145
+    },
+    "constants": {},
+    "expected": 0.8275862068965517
+  },
+  {
+    "name": "kvari",
+    "bands": {
+      "kGG": 0.12,
+      "kGR": 0.145,
+      "kGB": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.263157894736842
+  },
+  {
+    "name": "mnd705",
+    "bands": {
+      "rededge2": 0.12,
+      "rededge": 0.145,
+      "aerosol": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.263157894736842
+  },
+  {
+    "name": "mSR705",
+    "bands": {
+      "rededge2": 0.12,
+      "aerosol": 0.145
+    },
+    "constants": {},
+    "expected": -0.09433962264150941
+  },
+  {
+    "name": "snirvlswi",
+    "bands": {
+      "nir": 0.12,
+      "swir22": 0.145
+    },
+    "constants": {},
+    "expected": -0.01132075471698113
+  },
+  {
+    "name": "snirvndpi",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145,
+      "swir22": 0.16999999999999998
+    },
+    "constants": {
+      "alpha": 2.0
+    },
+    "expected": 0.0
+  },
+  {
+    "name": "snirvndvilswip",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145,
+      "swir22": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": 0.0019518542615484704
+  },
+  {
+    "name": "snirvndvilswis",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145,
+      "swir22": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.03201040988939492
+  },
+  {
+    "name": "snirvswir",
+    "bands": {
+      "nir": 0.12,
+      "red": 0.145,
+      "swir22": 0.16999999999999998
+    },
+    "constants": {},
+    "expected": -0.022007485539299078
+  }
+]

@@ -55,7 +55,8 @@ class RasterTests(unittest.TestCase):
             "ndmi": 5/11, "nbr": 7/9, "evi": 2.5*0.6/(0.8+6*0.2-7.5*0.05+1),
         }
         paths = {key: self.raster(key, [[value]]) for key, value in values.items()}
-        for name, keys in INDEX_BANDS.items():
+        for name in expected:
+            keys = INDEX_BANDS[name]
             with self.subTest(name=name):
                 output = compute_index(name, self.root/f"{name}.tif", **{key: paths[key] for key in keys})
                 with self.rasterio.open(output) as reader:
@@ -223,3 +224,22 @@ class LandsatToaTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+@unittest.skipUnless(RASTER_AVAILABLE, 'Raster dependencies required')
+class CropTests(unittest.TestCase):
+    setUp = RasterTests.setUp
+    raster = RasterTests.raster
+    def test_crop_masks_preserves_grid_and_respects_budget(self):
+        from universal_satellite.raster import crop_raster
+        source=self.raster('input',[[1,2],[3,4]],scale=0.1)
+        boundary=self.root/'aoi.geojson'
+        boundary.write_text(json.dumps({'type':'Polygon','coordinates':[[[90,24],[90.0000999,24],[90.0000999,23.9998],[90,23.9998],[90,24]]]}))
+        output=crop_raster(source,boundary,self.root/'crop.tif')
+        with self.rasterio.open(output) as reader:
+            self.assertEqual(reader.width,1)
+            self.assertEqual(reader.height,2)
+            self.assertEqual(reader.scales,(0.1,))
+            self.np.testing.assert_allclose(reader.read(1),[[1],[3]])
+        with self.assertRaises(ValueError):crop_raster(source,boundary,self.root/'too-big.tif',max_pixels=1)
+        with self.assertRaises(FileExistsError):crop_raster(source,boundary,output)

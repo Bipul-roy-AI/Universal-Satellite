@@ -1,0 +1,1352 @@
+{
+  "indices": {
+    "afri1600": [
+      "nir",
+      "swir16"
+    ],
+    "afri2100": [
+      "nir",
+      "swir22"
+    ],
+    "andwi": [
+      "blue",
+      "green",
+      "red",
+      "nir",
+      "swir16",
+      "swir22"
+    ],
+    "ari": [
+      "green",
+      "rededge"
+    ],
+    "ari2": [
+      "nir",
+      "green",
+      "rededge"
+    ],
+    "arvi": [
+      "nir",
+      "red",
+      "blue"
+    ],
+    "atsavi": [
+      "nir",
+      "red"
+    ],
+    "avi": [
+      "nir",
+      "red"
+    ],
+    "aweinsh": [
+      "green",
+      "swir16",
+      "nir",
+      "swir22"
+    ],
+    "aweish": [
+      "blue",
+      "green",
+      "nir",
+      "swir16",
+      "swir22"
+    ],
+    "ashburnvi": [
+      "nir08",
+      "red"
+    ],
+    "BAI": [
+      "red",
+      "nir"
+    ],
+    "baim": [
+      "nir",
+      "swir22"
+    ],
+    "bais2": [
+      "rededge2",
+      "rededge3",
+      "nir08",
+      "red",
+      "swir22"
+    ],
+    "bcc": [
+      "blue",
+      "red",
+      "green"
+    ],
+    "bi": [
+      "swir16",
+      "red",
+      "nir",
+      "blue"
+    ],
+    "bitm": [
+      "blue",
+      "green",
+      "red"
+    ],
+    "bixs": [
+      "green",
+      "red"
+    ],
+    "blfei": [
+      "green",
+      "red",
+      "swir22",
+      "swir16"
+    ],
+    "bndvi": [
+      "nir",
+      "blue"
+    ],
+    "brba": [
+      "red",
+      "swir16"
+    ],
+    "bwdrvi": [
+      "nir",
+      "blue"
+    ],
+    "BaI": [
+      "red",
+      "swir16",
+      "nir"
+    ],
+    "cci": [
+      "green1",
+      "red"
+    ],
+    "ci1swir": [
+      "nir",
+      "swir16",
+      "blue",
+      "green",
+      "red"
+    ],
+    "ci1woswir": [
+      "nir",
+      "blue",
+      "green",
+      "red"
+    ],
+    "ci2swir": [
+      "blue",
+      "green",
+      "red",
+      "nir",
+      "swir16",
+      "swir22"
+    ],
+    "ci2woswir": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "cig": [
+      "nir",
+      "green"
+    ],
+    "cire": [
+      "nir",
+      "rededge"
+    ],
+    "closdi": [
+      "nir",
+      "red"
+    ],
+    "cri550": [
+      "blue",
+      "green"
+    ],
+    "cri700": [
+      "blue",
+      "rededge"
+    ],
+    "crswir": [
+      "swir16",
+      "nir08",
+      "swir22"
+    ],
+    "csi": [
+      "nir",
+      "swir22"
+    ],
+    "csiswir": [
+      "nir",
+      "swir16"
+    ],
+    "csit": [
+      "nir",
+      "swir22",
+      "thermal"
+    ],
+    "csiwoswir": [
+      "nir"
+    ],
+    "cvi": [
+      "nir",
+      "red",
+      "green"
+    ],
+    "dbi": [
+      "blue",
+      "thermal1",
+      "nir",
+      "red"
+    ],
+    "dbsi": [
+      "swir16",
+      "green",
+      "nir",
+      "red"
+    ],
+    "dpdd": [
+      "vv",
+      "vh"
+    ],
+    "dsi": [
+      "swir16",
+      "nir"
+    ],
+    "dswi1": [
+      "nir",
+      "swir16"
+    ],
+    "dswi2": [
+      "swir16",
+      "green"
+    ],
+    "dswi3": [
+      "swir16",
+      "red"
+    ],
+    "dswi4": [
+      "green",
+      "red"
+    ],
+    "dswi5": [
+      "nir",
+      "green",
+      "swir16",
+      "red"
+    ],
+    "dvi": [
+      "nir",
+      "red"
+    ],
+    "dviplus": [
+      "green",
+      "nir",
+      "red"
+    ],
+    "dprvihh": [
+      "hv",
+      "hh"
+    ],
+    "dprvivv": [
+      "vh",
+      "vv"
+    ],
+    "ebbi": [
+      "swir16",
+      "nir",
+      "thermal"
+    ],
+    "ebi": [
+      "red",
+      "green",
+      "blue"
+    ],
+    "embi": [
+      "swir16",
+      "swir22",
+      "nir",
+      "green"
+    ],
+    "endvi": [
+      "nir",
+      "green",
+      "blue"
+    ],
+    "evi": [
+      "nir",
+      "red",
+      "blue"
+    ],
+    "evi2": [
+      "nir",
+      "red"
+    ],
+    "eviv": [
+      "nir",
+      "red",
+      "blue"
+    ],
+    "exg": [
+      "green",
+      "red",
+      "blue"
+    ],
+    "exgr": [
+      "green",
+      "red",
+      "blue"
+    ],
+    "exr": [
+      "red",
+      "green"
+    ],
+    "fai": [
+      "nir",
+      "red",
+      "swir16"
+    ],
+    "fcvi": [
+      "nir",
+      "red",
+      "green",
+      "blue"
+    ],
+    "fdi": [
+      "nir",
+      "rededge2",
+      "swir16"
+    ],
+    "fwei": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "gari": [
+      "nir",
+      "green",
+      "blue",
+      "red"
+    ],
+    "gbndvi": [
+      "nir",
+      "green",
+      "blue"
+    ],
+    "gcc": [
+      "green",
+      "red",
+      "blue"
+    ],
+    "gdvi": [
+      "nir",
+      "red"
+    ],
+    "gemi": [
+      "nir",
+      "red"
+    ],
+    "gli": [
+      "green",
+      "red",
+      "blue"
+    ],
+    "gm1": [
+      "rededge2",
+      "green"
+    ],
+    "gm2": [
+      "rededge2",
+      "rededge"
+    ],
+    "gndvi": [
+      "nir",
+      "green"
+    ],
+    "gosavi": [
+      "nir",
+      "green"
+    ],
+    "grari": [
+      "nir",
+      "green",
+      "red",
+      "blue"
+    ],
+    "grndvi": [
+      "nir",
+      "green",
+      "red"
+    ],
+    "grvi": [
+      "nir",
+      "green"
+    ],
+    "gsavi": [
+      "nir",
+      "green"
+    ],
+    "gvmi": [
+      "nir",
+      "swir22"
+    ],
+    "iavi": [
+      "nir",
+      "red",
+      "blue"
+    ],
+    "ibi": [
+      "swir16",
+      "nir",
+      "red",
+      "green"
+    ],
+    "ikaw": [
+      "red",
+      "blue"
+    ],
+    "ipvi": [
+      "nir",
+      "red"
+    ],
+    "ireci": [
+      "rededge3",
+      "red",
+      "rededge",
+      "rededge2"
+    ],
+    "irgbvi": [
+      "green",
+      "red",
+      "blue"
+    ],
+    "kdi": [
+      "nir",
+      "swir16",
+      "rededge3",
+      "rededge"
+    ],
+    "lswi": [
+      "nir",
+      "swir16"
+    ],
+    "mbi": [
+      "swir16",
+      "swir22",
+      "nir"
+    ],
+    "mbwi": [
+      "green",
+      "red",
+      "nir",
+      "swir16",
+      "swir22"
+    ],
+    "mcari": [
+      "rededge",
+      "red",
+      "green"
+    ],
+    "mcari1": [
+      "nir",
+      "red",
+      "green"
+    ],
+    "mcari2": [
+      "nir",
+      "red",
+      "green"
+    ],
+    "mcari705": [
+      "rededge2",
+      "rededge",
+      "green"
+    ],
+    "mcariosavi": [
+      "rededge",
+      "red",
+      "green",
+      "nir"
+    ],
+    "mcariosavi705": [
+      "rededge2",
+      "rededge",
+      "green"
+    ],
+    "mgrvi": [
+      "green",
+      "red"
+    ],
+    "mi": [
+      "nir",
+      "swir16"
+    ],
+    "mirbi": [
+      "swir22",
+      "swir16"
+    ],
+    "mlswi26": [
+      "nir",
+      "swir16"
+    ],
+    "mlswi27": [
+      "nir",
+      "swir22"
+    ],
+    "mndvi": [
+      "nir",
+      "swir22"
+    ],
+    "mndwi": [
+      "green",
+      "swir16"
+    ],
+    "mnli": [
+      "nir",
+      "red"
+    ],
+    "mrbvi": [
+      "red",
+      "blue"
+    ],
+    "msavi": [
+      "nir",
+      "red"
+    ],
+    "msi": [
+      "swir16",
+      "nir"
+    ],
+    "msr": [
+      "nir",
+      "red"
+    ],
+    "MSR705": [
+      "rededge2",
+      "rededge"
+    ],
+    "mtci": [
+      "rededge2",
+      "rededge",
+      "red"
+    ],
+    "mtvi1": [
+      "nir",
+      "green",
+      "red"
+    ],
+    "mtvi2": [
+      "nir",
+      "green",
+      "red"
+    ],
+    "mvi": [
+      "nir",
+      "green",
+      "swir16"
+    ],
+    "muwir": [
+      "blue",
+      "green",
+      "nir",
+      "swir22",
+      "swir16"
+    ],
+    "nbai": [
+      "swir22",
+      "swir16",
+      "green"
+    ],
+    "nbli": [
+      "red",
+      "thermal"
+    ],
+    "nblioli": [
+      "red",
+      "thermal1"
+    ],
+    "nbr": [
+      "nir",
+      "swir22"
+    ],
+    "nbr2": [
+      "swir16",
+      "swir22"
+    ],
+    "nbrswir": [
+      "swir22",
+      "swir16"
+    ],
+    "nbrt1": [
+      "nir",
+      "swir22",
+      "thermal"
+    ],
+    "nbrt2": [
+      "nir",
+      "thermal",
+      "swir22"
+    ],
+    "nbrt3": [
+      "nir",
+      "thermal",
+      "swir22"
+    ],
+    "nbrplus": [
+      "swir22",
+      "nir08",
+      "green",
+      "blue"
+    ],
+    "nbsims": [
+      "green",
+      "red",
+      "nir",
+      "blue",
+      "swir22",
+      "swir16"
+    ],
+    "nbui": [
+      "swir16",
+      "nir",
+      "thermal",
+      "red",
+      "green"
+    ],
+    "nd705": [
+      "rededge2",
+      "rededge"
+    ],
+    "ndbi": [
+      "swir16",
+      "nir"
+    ],
+    "ndbai": [
+      "swir16",
+      "thermal"
+    ],
+    "ndci": [
+      "rededge",
+      "red"
+    ],
+    "nddi": [
+      "nir",
+      "red",
+      "green"
+    ],
+    "ndgi": [
+      "green",
+      "nir",
+      "red"
+    ],
+    "ndglai": [
+      "green",
+      "red"
+    ],
+    "ndii": [
+      "nir",
+      "swir16"
+    ],
+    "ndisib": [
+      "thermal",
+      "blue",
+      "nir",
+      "swir16"
+    ],
+    "ndisig": [
+      "thermal",
+      "green",
+      "nir",
+      "swir16"
+    ],
+    "ndisimndwi": [
+      "thermal",
+      "green",
+      "swir16",
+      "nir"
+    ],
+    "ndisindwi": [
+      "thermal",
+      "green",
+      "nir",
+      "swir16"
+    ],
+    "ndisir": [
+      "thermal",
+      "red",
+      "nir",
+      "swir16"
+    ],
+    "ndmi": [
+      "nir",
+      "swir16"
+    ],
+    "ndpi": [
+      "nir",
+      "red",
+      "swir16"
+    ],
+    "ndpoli": [
+      "vv",
+      "vh"
+    ],
+    "ndponi": [
+      "swir16",
+      "green"
+    ],
+    "ndrei": [
+      "nir",
+      "rededge"
+    ],
+    "ndsi": [
+      "green",
+      "swir16"
+    ],
+    "ndsii": [
+      "green",
+      "nir"
+    ],
+    "ndsiitm": [
+      "red",
+      "swir16"
+    ],
+    "ndsiwv": [
+      "green",
+      "yellow"
+    ],
+    "ndsinw": [
+      "nir",
+      "swir16"
+    ],
+    "ndswir": [
+      "nir",
+      "swir16"
+    ],
+    "ndsaii": [
+      "red",
+      "swir16"
+    ],
+    "ndsoi": [
+      "swir22",
+      "green"
+    ],
+    "ndti": [
+      "red",
+      "green"
+    ],
+    "ndti4re": [
+      "swir16",
+      "swir22",
+      "nir",
+      "rededge3"
+    ],
+    "ndtilli": [
+      "swir16",
+      "swir22"
+    ],
+    "ndvi": [
+      "nir",
+      "red"
+    ],
+    "ndvi4re": [
+      "rededge3",
+      "rededge2",
+      "red",
+      "rededge"
+    ],
+    "ndvi705": [
+      "rededge2",
+      "rededge"
+    ],
+    "ndvimndwi": [
+      "nir",
+      "red",
+      "green",
+      "swir16"
+    ],
+    "ndvit": [
+      "nir",
+      "red",
+      "thermal"
+    ],
+    "ndwi": [
+      "green",
+      "nir"
+    ],
+    "ndwins": [
+      "green",
+      "nir"
+    ],
+    "ndyi": [
+      "green",
+      "blue"
+    ],
+    "ngrdi": [
+      "green",
+      "red"
+    ],
+    "nhfd": [
+      "rededge",
+      "aerosol"
+    ],
+    "nirv": [
+      "nir",
+      "red"
+    ],
+    "nirvh2": [
+      "nir",
+      "red"
+    ],
+    "nirvp": [
+      "nir",
+      "red"
+    ],
+    "nli": [
+      "nir",
+      "red"
+    ],
+    "nmdi": [
+      "nir",
+      "swir16",
+      "swir22"
+    ],
+    "npci": [
+      "red",
+      "aerosol"
+    ],
+    "nrfig": [
+      "green",
+      "swir22"
+    ],
+    "nrfir": [
+      "red",
+      "swir22"
+    ],
+    "nsds": [
+      "swir16",
+      "swir22"
+    ],
+    "nsdsi1": [
+      "swir16",
+      "swir22"
+    ],
+    "nsdsi2": [
+      "swir16",
+      "swir22"
+    ],
+    "nsdsi3": [
+      "swir16",
+      "swir22"
+    ],
+    "nstv1": [
+      "nir",
+      "swir22",
+      "thermal"
+    ],
+    "nstv2": [
+      "nir",
+      "swir22",
+      "thermal"
+    ],
+    "nwi": [
+      "blue",
+      "nir",
+      "swir16",
+      "swir22"
+    ],
+    "normg": [
+      "green",
+      "nir",
+      "red"
+    ],
+    "normnir": [
+      "nir",
+      "green",
+      "red"
+    ],
+    "normr": [
+      "red",
+      "nir",
+      "green"
+    ],
+    "ocvi": [
+      "nir",
+      "green",
+      "red"
+    ],
+    "osavi": [
+      "nir",
+      "red"
+    ],
+    "osi": [
+      "green",
+      "red",
+      "blue"
+    ],
+    "pi": [
+      "nir",
+      "red"
+    ],
+    "pisi": [
+      "blue",
+      "nir"
+    ],
+    "psri": [
+      "red",
+      "blue",
+      "rededge2"
+    ],
+    "qprvi": [
+      "hv",
+      "hh",
+      "vv"
+    ],
+    "rcc": [
+      "red",
+      "green",
+      "blue"
+    ],
+    "rdvi": [
+      "nir",
+      "red"
+    ],
+    "redsi": [
+      "rededge3",
+      "red",
+      "rededge"
+    ],
+    "rendvi": [
+      "rededge2",
+      "rededge"
+    ],
+    "rfdi": [
+      "hh",
+      "hv"
+    ],
+    "rgbvi": [
+      "green",
+      "blue",
+      "red"
+    ],
+    "rgri": [
+      "red",
+      "green"
+    ],
+    "ri": [
+      "red",
+      "green"
+    ],
+    "ri4xs": [
+      "red",
+      "green"
+    ],
+    "rndvi": [
+      "red",
+      "nir"
+    ],
+    "rvi": [
+      "rededge2",
+      "red"
+    ],
+    "rvi4re": [
+      "rededge3",
+      "rededge2",
+      "red",
+      "rededge"
+    ],
+    "rwi": [
+      "green",
+      "swir16"
+    ],
+    "s2rep": [
+      "rededge3",
+      "red",
+      "rededge",
+      "rededge2"
+    ],
+    "s2wi": [
+      "rededge",
+      "swir22"
+    ],
+    "s3": [
+      "nir",
+      "red",
+      "swir16"
+    ],
+    "sarvi": [
+      "nir",
+      "red",
+      "blue"
+    ],
+    "savi": [
+      "nir",
+      "red"
+    ],
+    "savi2": [
+      "nir",
+      "red"
+    ],
+    "savi4re": [
+      "rededge3",
+      "rededge2",
+      "red",
+      "rededge"
+    ],
+    "savit": [
+      "nir",
+      "red",
+      "thermal"
+    ],
+    "scowi": [
+      "blue",
+      "green",
+      "nir",
+      "swir16",
+      "swir22"
+    ],
+    "sevi": [
+      "nir",
+      "red"
+    ],
+    "si": [
+      "blue",
+      "green",
+      "red"
+    ],
+    "sipi": [
+      "nir",
+      "aerosol",
+      "red"
+    ],
+    "slavi": [
+      "nir",
+      "red",
+      "swir22"
+    ],
+    "sndti": [
+      "swir16",
+      "swir22"
+    ],
+    "sndti4re": [
+      "swir16",
+      "swir22",
+      "nir",
+      "rededge3"
+    ],
+    "sr": [
+      "nir",
+      "red"
+    ],
+    "sr2": [
+      "nir",
+      "green"
+    ],
+    "sr3": [
+      "nir08",
+      "green",
+      "rededge"
+    ],
+    "sr555": [
+      "rededge2",
+      "green"
+    ],
+    "sr705": [
+      "rededge2",
+      "rededge"
+    ],
+    "srvi": [
+      "nir",
+      "red",
+      "green",
+      "swir16"
+    ],
+    "srwi": [
+      "green",
+      "blue",
+      "nir",
+      "swir16"
+    ],
+    "sti": [
+      "swir16",
+      "swir22"
+    ],
+    "sti4re": [
+      "swir16",
+      "swir22",
+      "nir",
+      "rededge3"
+    ],
+    "swi": [
+      "green",
+      "nir",
+      "swir16"
+    ],
+    "swm": [
+      "blue",
+      "green",
+      "nir",
+      "swir16"
+    ],
+    "seli": [
+      "nir08",
+      "rededge"
+    ],
+    "tcari": [
+      "rededge",
+      "red",
+      "green"
+    ],
+    "tcariosavi": [
+      "rededge",
+      "red",
+      "green",
+      "nir"
+    ],
+    "tcariosavi705": [
+      "rededge2",
+      "rededge",
+      "green"
+    ],
+    "tci": [
+      "rededge",
+      "green",
+      "red"
+    ],
+    "tdvi": [
+      "nir",
+      "red"
+    ],
+    "tgi": [
+      "red",
+      "green",
+      "blue"
+    ],
+    "trrvi": [
+      "rededge2",
+      "red",
+      "nir"
+    ],
+    "tsavi": [
+      "nir",
+      "red"
+    ],
+    "ttvi": [
+      "rededge3",
+      "rededge2",
+      "nir08"
+    ],
+    "tvi": [
+      "nir",
+      "red"
+    ],
+    "twi": [
+      "rededge",
+      "rededge2",
+      "green",
+      "swir22",
+      "blue",
+      "nir"
+    ],
+    "trivi": [
+      "nir",
+      "green",
+      "red"
+    ],
+    "ui": [
+      "swir22",
+      "nir"
+    ],
+    "vari": [
+      "green",
+      "red",
+      "blue"
+    ],
+    "vari700": [
+      "rededge",
+      "red",
+      "blue"
+    ],
+    "vddpi": [
+      "vv",
+      "vh"
+    ],
+    "vhvvd": [
+      "vh",
+      "vv"
+    ],
+    "vhvvp": [
+      "vh",
+      "vv"
+    ],
+    "vhvvr": [
+      "vh",
+      "vv"
+    ],
+    "vi6t": [
+      "nir",
+      "thermal"
+    ],
+    "vi700": [
+      "rededge",
+      "red"
+    ],
+    "vibi": [
+      "nir",
+      "red",
+      "swir16"
+    ],
+    "vig": [
+      "green",
+      "red"
+    ],
+    "vvvhd": [
+      "vv",
+      "vh"
+    ],
+    "vvvhr": [
+      "vv",
+      "vh"
+    ],
+    "vvvhs": [
+      "vv",
+      "vh"
+    ],
+    "vgnirbi": [
+      "green",
+      "nir"
+    ],
+    "vrnirbi": [
+      "red",
+      "nir"
+    ],
+    "wci1": [
+      "blue",
+      "red",
+      "rededge",
+      "green",
+      "nir"
+    ],
+    "wci2": [
+      "blue",
+      "green",
+      "rededge",
+      "red",
+      "nir"
+    ],
+    "wdrvi": [
+      "nir",
+      "red"
+    ],
+    "wdvi": [
+      "nir",
+      "red"
+    ],
+    "wi1": [
+      "green",
+      "swir22"
+    ],
+    "wi2": [
+      "blue",
+      "swir22"
+    ],
+    "wi2015": [
+      "green",
+      "red",
+      "nir",
+      "swir16",
+      "swir22"
+    ],
+    "wri": [
+      "green",
+      "red",
+      "nir",
+      "swir16"
+    ],
+    "bnirv": [
+      "nir",
+      "blue"
+    ],
+    "kevi": [
+      "kNN",
+      "kNR",
+      "kNB",
+      "kNL"
+    ],
+    "kipvi": [
+      "kNN",
+      "kNR"
+    ],
+    "kndvi": [
+      "kNN",
+      "kNR"
+    ],
+    "krvi": [
+      "kNN",
+      "kNR"
+    ],
+    "kvari": [
+      "kGG",
+      "kGR",
+      "kGB"
+    ],
+    "mnd705": [
+      "rededge2",
+      "rededge",
+      "aerosol"
+    ],
+    "mSR705": [
+      "rededge2",
+      "aerosol"
+    ],
+    "snirvlswi": [
+      "nir",
+      "swir22"
+    ],
+    "snirvndpi": [
+      "nir",
+      "red",
+      "swir22"
+    ],
+    "snirvndvilswip": [
+      "nir",
+      "red",
+      "swir22"
+    ],
+    "snirvndvilswis": [
+      "nir",
+      "red",
+      "swir22"
+    ],
+    "snirvswir": [
+      "nir",
+      "red",
+      "swir22"
+    ]
+  },
+  "bands": [
+    "aerosol",
+    "blue",
+    "green",
+    "green1",
+    "hh",
+    "hv",
+    "kGB",
+    "kGG",
+    "kGR",
+    "kNB",
+    "kNL",
+    "kNN",
+    "kNR",
+    "nir",
+    "nir08",
+    "red",
+    "rededge",
+    "rededge2",
+    "rededge3",
+    "swir16",
+    "swir22",
+    "thermal",
+    "thermal1",
+    "vh",
+    "vv",
+    "yellow"
+  ]
+}

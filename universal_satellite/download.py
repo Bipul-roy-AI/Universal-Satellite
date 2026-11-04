@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import math
 from http.client import HTTPException
 import os
 from pathlib import Path
@@ -34,6 +35,8 @@ def download_asset(
     overwrite: bool = False,
     timeout: float = 60,
     cancelled=None,
+    resume=False,
+    retries=0,
 ) -> Path:
     """Download one complete STAC asset with atomic publication.
 
@@ -41,7 +44,7 @@ def download_asset(
     before calling this function. Existing files are preserved by default, and
     temporary downloads are removed after failure. Downloads are not resumed.
     """
-    if timeout <= 0:
+    if isinstance(timeout,bool) or not isinstance(timeout,(int,float)) or not math.isfinite(timeout) or timeout <= 0:
         raise ValueError("Download timeout must be positive.")
     if cancelled is not None and cancelled():
         raise DownloadCancelled("Download cancelled; no final file was written.")
@@ -50,6 +53,7 @@ def download_asset(
     if not isinstance(entry, dict) or not isinstance(entry.get("href"), str):
         raise ValueError(f"The scene has no downloadable asset named {asset!r}.")
     href = entry["href"]
+    parsed = None
     try:
         parsed = urlsplit(href)
         valid_http = parsed.scheme in {"https", "http"} and bool(parsed.hostname)
@@ -61,7 +65,7 @@ def download_asset(
             "Assets must use an HTTP(S) URL without embedded credentials. "
             "For s3:// assets, obtain a provider-supported HTTPS URL first."
         )
-        if parsed.scheme == "s3":
+        if parsed is not None and parsed.scheme == "s3":
             message += (
                 " This scene's link is s3:// (requester-pays AWS storage), which this tool "
                 "cannot fetch. Choose a source with public HTTPS assets, such as Sentinel-2 L2A, "
@@ -82,6 +86,11 @@ def download_asset(
             raise FileExistsError(f"Download already exists: {destination}")
         if destination.is_dir():
             raise IsADirectoryError(str(destination))
+
+    if resume or retries:
+        from .transfer import transfer
+        return transfer(href, destination, timeout=timeout, overwrite=overwrite,
+                        resume=resume, retries=retries, cancelled=cancelled)
 
     temporary: Path | None = None
     try:
@@ -153,6 +162,9 @@ def download_manifest(
     overwrite: bool = False,
     progress=None,
     cancelled=None,
+    workers=1,
+    resume=False,
+    retries=0,
 ) -> dict:
     """Download selected assets for every scene in a saved GeoJSON inventory.
 
@@ -163,6 +175,8 @@ def download_manifest(
     Individual asset failures are collected while remaining transfers continue.
     Signed links stay in memory and are never written back to the manifest.
     """
+    if isinstance(workers,bool) or not isinstance(workers,int) or not 1 <= workers <= 16:
+        raise ValueError("workers must be an integer from 1 through 16")
     from .export import read_geojson
     from .http import ProviderError
 
@@ -204,33 +218,58 @@ def download_manifest(
     if sign_planetary:
         from .client import Client
         signer = Client()
-    for scene_number, item in enumerate(items, 1):
-        for asset_number, key in enumerate(keys, 1):
-            if stop():
-                return result
-            # Do not put upstream URLs, query tokens, or arbitrary metadata in
-            # GUI progress messages; ordinal labels identify progress safely.
-            report(f"Downloading scene {scene_number} of {len(items)}, asset {asset_number} of {len(keys)}.")
-            try:
-                assets = item.get("assets", {})
-                if not isinstance(assets, dict) or key not in assets:
-                    raise ValueError("Scene does not provide the selected asset.")
-                if not isinstance(assets[key], dict) or not isinstance(assets[key].get("href"), str):
-                    raise ValueError("Selected asset has no valid downloadable link.")
-                selected = {**item, "assets": {key: assets[key]}}
-                if signer is not None:
-                    selected = signer.sign_item(selected)
-                destination = download_asset(
-                    selected, key, directory, overwrite=overwrite, cancelled=cancelled
-                )
-                result["downloaded"].append(str(destination))
-            except DownloadCancelled:
-                result["cancelled"] = True
-                report("Download cancelled; completed files were retained.")
-                return result
-            except (ValueError, DownloadError, ProviderError, OSError) as error:
-                message = re.sub(r"(?i)(?:https?|s3)://[^\s'\"<>]+", "[redacted URL]", str(error))
-                result["failed"].append({"scene": item["id"], "asset": key, "error": message})
-            completed += 1
-            report(f"Completed {completed} of {total} asset attempts.")
+    def attempt(item, key):
+        try:
+            assets = item.get("assets", {})
+            if key not in assets or not isinstance(assets[key], dict) or not isinstance(assets[key].get("href"), str):
+                raise ValueError("Scene has no valid downloadable link for the selected asset.")
+            selected = {**item, "assets": {key: assets[key]}}
+            if signer is not None:
+                selected = signer.sign_item(selected)
+            options = {"overwrite":overwrite, "cancelled":cancelled}
+            if resume or retries:
+                options.update(resume=resume,retries=retries)
+            return ("downloaded", str(download_asset(selected,key,directory,**options)))
+        except DownloadCancelled:
+            return ("cancelled", None)
+        except (ValueError, DownloadError, ProviderError, OSError) as error:
+            message = re.sub(r"(?i)(?:https?|s3)://[^\s'\"<>]+", "[redacted URL]", str(error))
+            return ("failed", {"scene":item["id"], "asset":key, "error":message})
+
+    def collect(outcome):
+        nonlocal completed
+        kind, value = outcome
+        if kind == "cancelled": result["cancelled"] = True
+        else: result[kind].append(value)
+        completed += 1
+        report(f"Completed {completed} of {total} asset attempts.")
+
+    tasks = [(item,key) for item in items for key in (list(item.get("assets",{})) if keys == ["*"] else keys)]
+    total = len(tasks)
+    if not total: raise ValueError("Manifest contains no downloadable assets")
+    if workers == 1:
+        for number,(item,key) in enumerate(tasks,1):
+            if stop(): return result
+            report(f"Downloading asset {number} of {total}.")
+            collect(attempt(item,key))
+            if result["cancelled"]: return result
+    else:
+        from concurrent.futures import ThreadPoolExecutor, wait, FIRST_COMPLETED
+        # Bound queued work as well as active threads; progress stays on caller thread.
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            pending = set()
+            iterator = iter(tasks)
+            exhausted = False
+            while pending or not exhausted:
+                if stop():
+                    for future in pending: future.cancel()
+                    exhausted = True
+                while not exhausted and len(pending) < workers:
+                    try: item,key = next(iterator)
+                    except StopIteration: exhausted = True; break
+                    pending.add(pool.submit(attempt,item,key))
+                if not pending: break
+                done,pending = wait(pending,timeout=0.1,return_when=FIRST_COMPLETED)
+                for future in done:
+                    if not future.cancelled(): collect(future.result())
     return result

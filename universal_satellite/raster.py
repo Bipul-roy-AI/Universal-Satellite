@@ -16,14 +16,8 @@ from pathlib import Path
 import tempfile
 
 
-INDEX_BANDS = {
-    "ndvi": ("nir", "red"),
-    "ndwi": ("green", "nir"),
-    "mndwi": ("green", "swir16"),
-    "ndmi": ("nir", "swir16"),
-    "nbr": ("nir", "swir22"),
-    "evi": ("nir", "red", "blue"),
-}
+from .indices import INDEX_BANDS, evaluate, definition, parameters, normalize
+
 
 
 def landsat_toa(
@@ -138,7 +132,7 @@ def landsat_toa(
             temporary.unlink(missing_ok=True)
 
 
-def compute_index(name: str, output: str | Path, **bands: str | Path) -> Path:
+def compute_index(name: str, output: str | Path, *, constants=None, **bands: str | Path) -> Path:
     """Write a float32 GeoTIFF index, preserving CRS, grid, and input masks.
 
     Only aligned single-band files are accepted; this function does not resample
@@ -146,12 +140,13 @@ def compute_index(name: str, output: str | Path, **bands: str | Path) -> Path:
     inputs, zero denominators, and non-finite results receive nodata (-9999).
     Existing output files and input aliases are never overwritten.
     """
-    name = name.lower()
+    name = normalize(name)
     if name not in INDEX_BANDS:
         raise ValueError(f"Unknown index {name!r}. Choose: {', '.join(INDEX_BANDS)}.")
     required = set(INDEX_BANDS[name])
     if set(bands) != required:
         raise ValueError(f"{name.upper()} requires exactly these bands: {', '.join(INDEX_BANDS[name])}.")
+    parameters(name, constants)
     destination = Path(output).expanduser()
     sources = {key: Path(path).expanduser() for key, path in bands.items()}
     if any(destination.resolve() == path.resolve() for path in sources.values()):
@@ -213,23 +208,77 @@ def compute_index(name: str, output: str | Path, **bands: str | Path) -> Path:
                             valid = good if valid is None else valid & good
                             values[key] = value
                         with np.errstate(divide="ignore", invalid="ignore", over="ignore"):
-                            if name == "evi":
-                                numerator = 2.5 * (values["nir"] - values["red"])
-                                denominator = values["nir"] + 6 * values["red"] - 7.5 * values["blue"] + 1
-                            else:
-                                first, second = INDEX_BANDS[name]
-                                numerator = values[first] - values[second]
-                                denominator = values[first] + values[second]
-                            result = numerator / denominator
-                        valid &= (denominator != 0) & np.isfinite(result)
+                            result = evaluate(name, values, constants=constants)
+                        valid &= np.isfinite(result)
                         # Float64 results must also fit the float32 output type.
                         valid &= np.abs(result) <= np.finfo("float32").max
                         writer.write(np.where(valid, result, -9999.0).astype("float32"), 1, window=window)
-                writer.set_band_description(1, name.upper())
-                writer.update_tags(index=name, input_scaling="raster scale and offset", cloud_mask="caller supplied")
+                writer.set_band_description(1, definition(name)["short_name"])
+                writer.update_tags(index=name, formula=definition(name)["formula"], reference=definition(name)["reference"], parameters=json.dumps(parameters(name, constants)), input_scaling="raster scale and offset", cloud_mask="caller supplied")
         os.link(temporary, destination)
         temporary.unlink()
         return destination
     finally:
         if temporary is not None:
             temporary.unlink(missing_ok=True)
+
+
+def crop_raster(source, boundary, output, *, max_pixels=25000000):
+    """Crop/mask a local raster or remote COG with GeoJSON/Shapefile polygons.
+
+    Rasterio/GDAL uses HTTP range reads when the provider supports them. A pixel
+    budget prevents accidental whole-scene memory allocation. GeoJSON is WGS84;
+    Shapefiles must declare a CRS. No reprojection of the source pixel grid.
+    """
+    import numpy as np
+    import rasterio
+    from rasterio.mask import mask, raster_geometry_mask
+    from rasterio.warp import transform_geom
+    from urllib.parse import urlsplit
+    if isinstance(max_pixels,bool) or not isinstance(max_pixels,int) or max_pixels<=0:
+        raise ValueError('max_pixels must be a positive integer')
+    destination=Path(output).expanduser()
+    if destination.exists() or destination.is_symlink():raise FileExistsError(str(destination))
+    if urlsplit(str(source)).scheme not in ('','https'):
+        # Windows drive letters are local paths, not URL protocols.
+        if not (len(str(source))>2 and str(source)[1:3] in (':\\',':/')):
+            raise ValueError('Crop source must be a local raster or HTTPS COG')
+    boundary=Path(boundary)
+    if boundary.suffix.lower()=='.shp':
+        try: import fiona
+        except ImportError: raise RuntimeError('Shapefile clipping requires the vector extra (Fiona)') from None
+        with fiona.open(boundary) as collection:
+            vector_crs=collection.crs_wkt or collection.crs
+            if not vector_crs: raise ValueError('Shapefile must declare a CRS')
+            geometries=[dict(f['geometry']) for f in collection if f['geometry']]
+    else:
+        data=json.loads(boundary.read_text(encoding='utf-8'))
+        if data.get('crs'):raise ValueError('Use RFC 7946 WGS84 GeoJSON without a legacy crs member')
+        vector_crs='EPSG:4326'
+        geometries=[f.get('geometry') for f in data['features']] if data.get('type')=='FeatureCollection' else [data.get('geometry') if data.get('type')=='Feature' else data]
+    if not geometries or any(not isinstance(g,dict) or g.get('type') not in ('Polygon','MultiPolygon') for g in geometries):
+        raise ValueError('Boundary must contain Polygon or MultiPolygon geometries')
+    temporary=None
+    try:
+        with rasterio.open(source) as reader:
+            if not reader.crs:raise ValueError('Source raster must declare a CRS')
+            shapes=[transform_geom(vector_crs,reader.crs,g) for g in geometries]
+            # geometry_window checks overlap without allocating a mask.
+            from rasterio.features import geometry_window
+            window=geometry_window(reader,shapes)
+            if window.width*window.height*reader.count>max_pixels:
+                raise ValueError('Crop exceeds max_pixels; reduce the AOI or explicitly increase the budget')
+            values, transform=mask(reader,shapes,crop=True,filled=False)
+            destination.parent.mkdir(parents=True,exist_ok=True)
+            with tempfile.NamedTemporaryFile(dir=destination.parent,prefix='.crop-',suffix='.tif',delete=False) as handle:
+                temporary=Path(handle.name)
+            profile={'driver':'GTiff','height':values.shape[1],'width':values.shape[2],'count':reader.count,'dtype':'float32',
+                'crs':reader.crs,'transform':transform,'nodata':float('nan'),'compress':'deflate','tiled':True}
+            with rasterio.open(temporary,'w',**profile) as writer:
+                writer.write(values.astype('float32').filled(np.nan))
+                writer.scales=reader.scales;writer.offsets=reader.offsets
+                writer.update_tags(processing='polygon crop and mask; source grid and scale/offset retained')
+        os.link(temporary,destination)
+        return destination
+    finally:
+        if temporary:temporary.unlink(missing_ok=True)

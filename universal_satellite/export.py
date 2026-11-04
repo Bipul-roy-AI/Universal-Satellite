@@ -29,6 +29,17 @@ def validate_geojson(value):
     for feature in value["features"]:
         if not isinstance(feature, dict) or feature.get("type") != "Feature" or not feature.get("id") or not isinstance(feature.get("properties"), dict):
             raise ValueError("Expected STAC features with id and properties")
+        assets = feature.get("assets", {})
+        if not isinstance(assets, dict):
+            raise ValueError("STAC assets must be an object of asset objects")
+        if not isinstance(feature["id"], str):
+            raise ValueError("STAC id must be a string")
+        for field in ("datetime", "start_datetime", "platform"):
+            v = feature["properties"].get(field)
+            if v is not None and not isinstance(v, str):
+                raise ValueError(f"STAC {field} must be a string or null")
+        if "collection" in feature and not isinstance(feature["collection"], str):
+            raise ValueError("STAC collection must be a string")
     return value
 
 

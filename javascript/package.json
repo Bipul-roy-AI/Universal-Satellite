@@ -1,0 +1,13 @@
+{
+  "name": "@bipul-roy-ai/universal-satellite",
+  "version": "0.3.0",
+  "description": "Typed Universal Satellite client with native spectral math and a shared Python geospatial engine",
+  "type": "module",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "exports": {".": {"types":"./index.d.ts", "import":"./index.js"}},
+  "bin": {"universal-satellite-js":"./cli.js"},
+  "files": ["*.js","*.d.ts","data","README.md"],
+  "engines": {"node": ">=20"},
+  "scripts": {"test":"node --test test/*.test.js"}
+}

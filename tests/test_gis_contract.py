@@ -18,6 +18,7 @@ SEARCHABLE_IDS = [
     "cop-dem-glo-30", "nasadem", "esa-worldcover", "jrc-gsw",
     "modis-surface-reflectance", "modis-vegetation", "sentinel-2-l1c",
     "landsat-c2-l1", "landsat-c2-ard-toa",
+    "smap-l4", "gpm-imerg", "viirs-black-marble", "emit-l2a", "viirs-active-fire", "jason-3", "sentinel-6", "enmap-l2a", "chirps-daily", "sentinel-3-products", "sentinel-5p-products", "sentinel-2-products", "3dep-seamless", "dynamic-world", "hyperion", "firms-viirs", "firms-modis",
 ]
 
 
@@ -161,7 +162,7 @@ class QgisContractTests(unittest.TestCase):
                     algorithm.parameterAsEnum.return_value = index
                     algorithm.processAlgorithm({"START": "2024-01-01", "END": "2024-03-31"}, None, feedback)
                     self.assertEqual(client.search.call_args.kwargs["dataset"], dataset_id)
-        self.assertEqual(client.search.call_count, 13)
+        self.assertEqual(client.search.call_count, len(SEARCHABLE_IDS))
 
     def test_search_transforms_extent_and_preserves_assets(self):
         algorithm = self.module.SearchScenes()
@@ -260,7 +261,7 @@ class QgisContractTests(unittest.TestCase):
             provider.loadAlgorithms()
         self.assertEqual(
             [call.args[0].name() for call in provider.addAlgorithm.call_args_list],
-            ["search_scenes", "download_assets", "raster_index"],
+            ["search_scenes", "download_assets", "raster_index", "spectral_index", "environmental_profile", "crop_raster"],
         )
 
     def test_download_gui_has_manifest_keys_folder_and_safe_defaults(self):
@@ -268,7 +269,7 @@ class QgisContractTests(unittest.TestCase):
         algorithm.addParameter, algorithm.addOutput = Mock(), Mock()
         algorithm.initAlgorithm()
         parameters = {call.args[0].name: call.args[0] for call in algorithm.addParameter.call_args_list}
-        self.assertEqual(set(parameters), {"MANIFEST", "ASSETS", "OUTPUT_DIR", "SIGN_PLANETARY", "OVERWRITE"})
+        self.assertEqual(set(parameters), {"MANIFEST", "ASSETS", "OUTPUT_DIR", "SIGN_PLANETARY", "OVERWRITE", "RESUME", "WORKERS"})
         self.assertEqual(parameters["ASSETS"].kwargs["defaultValue"], "red,nir")
         self.assertFalse(parameters["SIGN_PLANETARY"].kwargs["defaultValue"])
         self.assertFalse(parameters["OVERWRITE"].kwargs["defaultValue"])
@@ -388,7 +389,7 @@ class ArcgisContractTests(unittest.TestCase):
         )
 
     def test_toolbox_registers_search_download_and_index_tools(self):
-        self.assertEqual(self.module.Toolbox().tools, [self.module.SearchScenes, self.module.RasterIndex, self.module.DownloadAssets])
+        self.assertEqual(self.module.Toolbox().tools, [self.module.CropRaster, self.module.EnvironmentalProfile, self.module.SpectralIndex, self.module.SearchScenes, self.module.RasterIndex, self.module.DownloadAssets])
 
     def test_search_dropdown_exposes_toa_sr_as_separate_dataset_ids(self):
         from universal_satellite.catalog import list_datasets
@@ -452,7 +453,7 @@ class ArcgisContractTests(unittest.TestCase):
                 legacy = types.SimpleNamespace(value=source.id, valueAsText=source.id)
                 algorithm.updateParameters([legacy])
                 self.assertEqual(legacy.value, label)
-        self.assertEqual(client.search.call_count, 26)
+        self.assertEqual(client.search.call_count, 2 * len(SEARCHABLE_IDS))
 
     def test_sdk_catalog_errors_do_not_silently_fall_back(self):
         import universal_satellite.catalog

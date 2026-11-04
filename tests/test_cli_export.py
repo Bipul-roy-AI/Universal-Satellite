@@ -52,7 +52,7 @@ class ExportAndCLITests(unittest.TestCase):
     def test_download_failure_sets_exit_status_and_continues_other_scenes(self):
         value = fixture()
         value["features"].append({**value["features"][0], "id": "two"})
-        with patch("universal_satellite.cli.read_geojson", return_value=value), patch("universal_satellite.cli.download_asset", side_effect=[ValueError("missing"), Path("ok.tif")]) as mock:
+        with patch("universal_satellite.export.read_geojson", return_value=value), patch("universal_satellite.download.download_asset", side_effect=[ValueError("missing"), Path("ok.tif")]) as mock:
             with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
                 status = main(["download", "scenes.geojson", "--asset", "red"])
             self.assertEqual(status, 1)

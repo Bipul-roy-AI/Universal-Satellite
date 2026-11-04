@@ -82,7 +82,7 @@ def _atomic_geojson(result, destination):
             os.unlink(temporary)
 
 
-def _download_assets(manifest, asset_text, output, sign_planetary, overwrite, feedback):
+def _download_assets(manifest, asset_text, output, sign_planetary, overwrite, feedback, **options):
     try:
         from universal_satellite.download import download_manifest
     except ImportError as exc:
@@ -102,7 +102,7 @@ def _download_assets(manifest, asset_text, output, sign_planetary, overwrite, fe
 
     result = download_manifest(
         manifest, keys, output, sign_planetary=sign_planetary, overwrite=overwrite,
-        progress=progress, cancelled=feedback.isCanceled,
+        progress=progress, cancelled=feedback.isCanceled, **options,
     )
     downloaded = len(result["downloaded"])
     failures = result["failed"]
@@ -246,6 +246,7 @@ class SearchScenes(QgsProcessingAlgorithm):
                     output, self.parameterAsString(parameters, "DOWNLOAD_ASSETS", context), download_dir,
                     self.parameterAsBool(parameters, "SIGN_PLANETARY", context),
                     self.parameterAsBool(parameters, "OVERWRITE", context), feedback,
+                **({"resume":self.parameterAsBool(parameters,"RESUME",context), "workers":self.parameterAsInt(parameters,"WORKERS",context), "retries":2} if "WORKERS" in parameters else {}),
                 )
                 outputs.update({"DOWNLOAD_DIR": download_dir, "DOWNLOAD_SUMMARY": download_result["SUMMARY"]})
             else:
@@ -311,6 +312,8 @@ class DownloadAssets(QgsProcessingAlgorithm):
         self.addParameter(QgsProcessingParameterBoolean(
             "OVERWRITE", "Overwrite existing downloaded files", defaultValue=False
         ))
+        self.addParameter(QgsProcessingParameterBoolean("RESUME", "Resume interrupted downloads", defaultValue=True))
+        self.addParameter(QgsProcessingParameterNumber("WORKERS", "Concurrent asset downloads", type=QgsProcessingParameterNumber.Integer, defaultValue=4, minValue=1, maxValue=16))
         self.addOutput(QgsProcessingOutputString("SUMMARY", "Download result summary"))
 
     def processAlgorithm(self, parameters, context, feedback):
@@ -321,6 +324,7 @@ class DownloadAssets(QgsProcessingAlgorithm):
                 self.parameterAsString(parameters, "OUTPUT_DIR", context),
                 self.parameterAsBool(parameters, "SIGN_PLANETARY", context),
                 self.parameterAsBool(parameters, "OVERWRITE", context), feedback,
+                **({"resume":self.parameterAsBool(parameters,"RESUME",context), "workers":self.parameterAsInt(parameters,"WORKERS",context), "retries":2} if "WORKERS" in parameters else {}),
             )
         except QgsProcessingException:
             raise
@@ -391,3 +395,87 @@ class RasterIndex(QgsProcessingAlgorithm):
             return {"OUTPUT": output}
         except Exception as exc:
             raise QgsProcessingException(str(exc)) from exc
+
+
+def _index_catalog():
+    return json.loads(Path(__file__).with_name("indices.json").read_text(encoding="utf-8"))
+
+
+class SpectralIndex(QgsProcessingAlgorithm):
+    def name(self): return "spectral_index"
+    def displayName(self): return "Compute spectral index (full catalog)"
+    def group(self): return "Raster analysis"
+    def groupId(self): return "analysis"
+    def createInstance(self): return SpectralIndex()
+    def shortHelpString(self):
+        return "Choose an index; the menu lists its required bands. Supply only those aligned, calibrated single-band rasters. Coefficients are JSON; sensor wavelengths and scene-specific coefficients must be explicit. See docs/indices.md."
+
+    def initAlgorithm(self, config=None):
+        catalog = _index_catalog()
+        self.addParameter(QgsProcessingParameterEnum("INDEX", "Index — required bands", options=[k + " — " + ", ".join(v) for k,v in catalog["indices"].items()]))
+        self.addParameter(QgsProcessingParameterString("CONSTANTS", "Coefficient overrides (JSON)", defaultValue="{}", optional=True))
+        for key in catalog["bands"]:
+            self.addParameter(QgsProcessingParameterFile(key, key + " (only if required by index)", extension="tif", optional=True))
+        self.addParameter(QgsProcessingParameterFileDestination("OUTPUT", "Index raster", fileFilter="GeoTIFF (*.tif)"))
+
+    def processAlgorithm(self, parameters, context, feedback):
+        try:
+            from universal_satellite.raster import compute_index
+            if feedback.isCanceled(): return {}
+            catalog = _index_catalog()
+            name = list(catalog["indices"])[self.parameterAsEnum(parameters,"INDEX",context)]
+            bands = {k:self.parameterAsFile(parameters,k,context) for k in catalog["indices"][name]}
+            bands = {k:v for k,v in bands.items() if v}
+            output = self.parameterAsFileOutput(parameters,"OUTPUT",context)
+            compute_index(name, output, constants=json.loads(self.parameterAsString(parameters,"CONSTANTS",context) or "{}"), **bands)
+            feedback.setProgress(100)
+            return {"OUTPUT":output}
+        except Exception as exc:
+            raise QgsProcessingException(str(exc)) from exc
+
+
+class EnvironmentalProfile(QgsProcessingAlgorithm):
+    def name(self): return 'environmental_profile'
+    def displayName(self): return 'Download weather, air-quality or soil point profile'
+    def group(self): return 'Environmental data'
+    def groupId(self): return 'environment'
+    def createInstance(self): return EnvironmentalProfile()
+    def shortHelpString(self): return 'Actual model/soil point profiles in JSON with native units. SoilGrids REST may be unavailable. These are not satellite images.'
+    def initAlgorithm(self,config=None):
+        self.addParameter(QgsProcessingParameterEnum('KIND','Profile',options=['forecast','air-quality','soil']))
+        self.addParameter(QgsProcessingParameterNumber('LATITUDE','Latitude (WGS84)',type=QgsProcessingParameterNumber.Double,minValue=-90,maxValue=90))
+        self.addParameter(QgsProcessingParameterNumber('LONGITUDE','Longitude (WGS84)',type=QgsProcessingParameterNumber.Double,minValue=-180,maxValue=180))
+        self.addParameter(QgsProcessingParameterEnum('MODEL','Forecast model',options=['ecmwf_ifs','gfs_seamless']))
+        self.addParameter(QgsProcessingParameterEnum('DEPTH','Soil depth',options=['0-5cm','5-15cm','15-30cm','30-60cm','60-100cm','100-200cm']))
+        self.addParameter(QgsProcessingParameterFileDestination('OUTPUT','Profile JSON',fileFilter='JSON (*.json)'))
+    def processAlgorithm(self,parameters,context,feedback):
+        try:
+            from universal_satellite.client import Client
+            from universal_satellite.export import write_json
+            if feedback.isCanceled():return {}
+            data=Client().environment(['forecast','air-quality','soil'][self.parameterAsEnum(parameters,'KIND',context)],latitude=self.parameterAsDouble(parameters,'LATITUDE',context),longitude=self.parameterAsDouble(parameters,'LONGITUDE',context),model=['ecmwf_ifs','gfs_seamless'][self.parameterAsEnum(parameters,'MODEL',context)],depth=['0-5cm','5-15cm','15-30cm','30-60cm','60-100cm','100-200cm'][self.parameterAsEnum(parameters,'DEPTH',context)])
+            output=self.parameterAsFileOutput(parameters,'OUTPUT',context)
+            write_json(data,output);feedback.pushInfo(data['universal_satellite']['attribution'])
+            return {'OUTPUT':output}
+        except Exception as exc: raise QgsProcessingException(str(exc)) from exc
+
+
+class CropRaster(QgsProcessingAlgorithm):
+    def name(self): return 'crop_raster'
+    def displayName(self): return 'Crop raster or remote COG to polygon'
+    def group(self): return 'Raster analysis'
+    def groupId(self): return 'analysis'
+    def createInstance(self): return CropRaster()
+    def shortHelpString(self): return 'Crop a local raster or public/signed HTTPS COG using WGS84 GeoJSON or a Shapefile with CRS. Source grid and masks are retained. Maximum 25 million band-pixels. Protected products must be downloaded first.'
+    def initAlgorithm(self,config=None):
+        self.addParameter(QgsProcessingParameterString('SOURCE','Local raster path or HTTPS COG URL'))
+        self.addParameter(QgsProcessingParameterFile('BOUNDARY','Polygon GeoJSON or Shapefile'))
+        self.addParameter(QgsProcessingParameterFileDestination('OUTPUT','Clipped raster',fileFilter='GeoTIFF (*.tif)'))
+    def processAlgorithm(self,parameters,context,feedback):
+        try:
+            from universal_satellite.raster import crop_raster
+            if feedback.isCanceled():return {}
+            output=self.parameterAsFileOutput(parameters,'OUTPUT',context)
+            crop_raster(self.parameterAsString(parameters,'SOURCE',context),self.parameterAsFile(parameters,'BOUNDARY',context),output)
+            return {'OUTPUT':output}
+        except Exception as exc:raise QgsProcessingException(str(exc)) from exc

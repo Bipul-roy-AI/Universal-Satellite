@@ -1,3 +1,5 @@
+> Version note: this page describes the original 0.2 workflows. For the 0.3 feature set, expanded menus and current limitations, use [README](../README.md), [indices](indices.md), [downloads](downloads.md) and [providers](providers.md).
+
 # Data sources: historical records through recent acquisitions
 
 Universal Satellite is a search and processing client, not a mirror of every Earth observation archive. This directory identifies **13 searchable STAC collections** and **11 reference sources**. Reference entries describe useful archives and link to their providers; they have no dedicated STAC adapter here. The generic Landsat Level-1 collection may expose historical MSS scenes, but the separate MSS entry remains a reference to its specialist retrieval/processing workflow. ERA5 additionally has a separate weather time-series adapter through Open-Meteo, described below. Other reference sources have no implemented adapter.

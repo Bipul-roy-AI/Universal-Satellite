@@ -1,3 +1,5 @@
+> Version note: this page describes the original 0.2 workflows. For the 0.3 feature set, expanded menus and current limitations, use [README](../README.md), [indices](indices.md), [downloads](downloads.md) and [providers](providers.md).
+
 # QGIS and ArcGIS Pro toolboxes
 
 | Application | Toolbox ZIP | Install |

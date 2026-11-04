@@ -12,6 +12,7 @@ from .client import Client
 from .download import DownloadError, download_asset
 from .export import read_geojson, summarize, write_geojson, write_json
 from .http import ProviderError
+from .indices import INDEX_BANDS, BAND_NAMES, REGISTRY, CONSTANTS
 
 
 def _bbox(value):
@@ -46,12 +47,17 @@ def parser():
     download.add_argument("--asset", required=True, help="Exact STAC asset key; use summary to inspect available keys")
     download.add_argument("--output", default="downloads", help="Directory")
     download.add_argument("--overwrite", action="store_true")
+    download.add_argument("--workers", type=int, default=4)
+    download.add_argument("--retries", type=int, default=2)
+    download.add_argument("--no-resume", action="store_true")
     download.add_argument("--sign-planetary", action="store_true", help="Request short-lived Planetary Computer Azure asset SAS links in memory")
+    commands.add_parser("indices", help="List all formulas, required bands, references and constants as JSON")
     index = commands.add_parser("index", help="Compute a georeferenced spectral index from aligned single-band GeoTIFFs")
-    index.add_argument("--name", required=True, choices=["ndvi", "ndwi", "mndwi", "ndmi", "nbr", "evi"])
-    for band in ["nir", "red", "green", "blue", "swir16", "swir22"]:
+    index.add_argument("--name", required=True, choices=list(INDEX_BANDS))
+    for band in BAND_NAMES:
         index.add_argument("--" + band, help="Local single-band raster (with correct reflectance scale/offset metadata)")
     index.add_argument("--output", required=True)
+    index.add_argument("--constants", default="{}", help='JSON coefficient overrides, e.g. {"L":0.5}')
     toa = commands.add_parser("toa", help="Calibrate a Landsat Level-1 reflective DN band to TOA reflectance using its MTL JSON")
     toa.add_argument("--input", required=True, help="Local Level-1 DN GeoTIFF (not SR or an ARD TOA product)")
     toa.add_argument("--mtl", required=True, help="Matching Landsat MTL JSON file")
@@ -64,6 +70,19 @@ def parser():
     weather.add_argument("--end", required=True)
     weather.add_argument("--variables", default="temperature_2m,precipitation")
     weather.add_argument("--output")
+    environment = commands.add_parser("environment", help="Download a model/soil point profile as JSON")
+    environment.add_argument("kind", choices=["forecast","air-quality","soil"])
+    environment.add_argument("--latitude", type=float, required=True)
+    environment.add_argument("--longitude", type=float, required=True)
+    environment.add_argument("--model", default="ecmwf_ifs")
+    environment.add_argument("--depth", default="0-5cm")
+    environment.add_argument("--variables")
+    environment.add_argument("--output")
+    crop = commands.add_parser("crop", help="Clip a local raster or HTTPS COG to a GeoJSON/Shapefile polygon")
+    crop.add_argument("--source", required=True)
+    crop.add_argument("--boundary", required=True)
+    crop.add_argument("--output", required=True)
+    crop.add_argument("--max-pixels", type=int, default=25000000)
     commands.add_parser("doctor", help="Report installed local capabilities; does not test external services")
     return root
 
@@ -96,32 +115,29 @@ def run(args):
     elif args.command == "summary":
         _emit(summarize(read_geojson(args.manifest)))
     elif args.command == "download":
-        value = read_geojson(args.manifest)
-        failures = 0
-        for item in value["features"]:
-            try:
-                if args.asset not in item.get("assets", {}):
-                    raise ValueError(f"asset {args.asset!r} not present")
-                if args.sign_planetary:
-                    # Sign only the selected asset, never persist signed links.
-                    item = Client().sign_item({**item, "assets": {args.asset: item["assets"][args.asset]}})
-                print(download_asset(item, args.asset, args.output, overwrite=args.overwrite))
-            except (ValueError, DownloadError, ProviderError, OSError) as exc:
-                print(f"Download failed for {item['id']}: {exc}", file=sys.stderr)
-                failures += 1
-        if not value["features"]:
-            raise ValueError("Manifest contains no scenes to download")
-        return 1 if failures else 0
+        from .download import download_manifest
+        result = download_manifest(args.manifest, args.asset.split(","), args.output,
+            sign_planetary=args.sign_planetary, overwrite=args.overwrite,
+            workers=args.workers, retries=args.retries, resume=not args.no_resume)
+        _emit(result)
+        return 1 if result["failed"] or result["cancelled"] else 0
+    elif args.command == "indices":
+        _emit({"indices":REGISTRY,"constants":CONSTANTS,"bands":INDEX_BANDS})
     elif args.command == "index":
         from .raster import compute_index
-        bands = {v: getattr(args, v) for v in ["nir", "red", "green", "blue", "swir16", "swir22"] if getattr(args, v)}
-        print(compute_index(args.name, args.output, **bands))
+        bands = {v: getattr(args, v) for v in BAND_NAMES if getattr(args, v)}
+        print(compute_index(args.name, args.output, constants=json.loads(args.constants), **bands))
     elif args.command == "weather":
         value = Client().weather(latitude=args.latitude, longitude=args.longitude, start=args.start, end=args.end, variables=args.variables.split(","))
         _emit(value, args.output)
     elif args.command == "toa":
         from .raster import landsat_toa
         print(landsat_toa(args.input, args.mtl, args.band, args.output))
+    elif args.command == "environment":
+        _emit(Client().environment(args.kind,latitude=args.latitude,longitude=args.longitude,model=args.model,depth=args.depth,variables=args.variables.split(",") if args.variables else None),args.output)
+    elif args.command == "crop":
+        from .raster import crop_raster
+        print(crop_raster(args.source,args.boundary,args.output,max_pixels=args.max_pixels))
     elif args.command == "doctor":
         _emit({"version": __version__, "python": sys.version.split()[0],
             "stac_search": "installed; live connectivity not checked",

@@ -1,8 +1,8 @@
 [general]
 name=Universal Satellite Processing
 description=Search satellite scenes, download image assets to a folder, and compute raster indices.
-about=Processing tools backed by the separately installed universal-satellite Python package. Search returns a GeoJSON manifest with optional image downloads; a separate download tool can save assets from an existing manifest. The core SDK 0.2.0 or newer is required for downloads.
-version=0.2.0
+about=Processing tools backed by the separately installed universal-satellite Python package. Search returns a GeoJSON manifest with optional image downloads; a separate download tool can save assets from an existing manifest. The core SDK 0.3.0 or newer is required for downloads.
+version=0.3.0
 qgisMinimumVersion=3.28
 author=Universal Satellite contributors
 email=
