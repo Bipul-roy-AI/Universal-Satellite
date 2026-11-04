@@ -131,5 +131,3 @@ The toolbox running in the ArcGIS Pro **Geoprocessing** pane:
 - **Search:** the **Data source** dropdown shows each named collection with its dataset ID in brackets, including the Sentinel-2 L2A, Landsat, Sentinel-1, DEM, WorldCover, JRC water and MODIS entries from section 1.
 - **Index:** choose `ndvi`, `ndwi` or `nbr`, two aligned single-band GeoTIFFs, and an output `.tif`.
 - **Download:** point the tool at an existing scene manifest, enter asset keys such as `red,nir`, and choose an output folder. The capture shows the job reporting per-scene, per-asset progress inside the Geoprocessing pane.
-
-These are tool-panel captures from ArcGIS Pro. They show the toolbox loading and the job running, not a completed search map, finished downloads or an index output. The ArcGIS Pro version and run date were not recorded.
